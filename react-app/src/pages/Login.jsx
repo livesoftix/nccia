@@ -106,8 +106,8 @@ export default function Login() {
           <div style={{position:'absolute',width:'320px',height:'320px',borderRadius:'50%',border:'1.5px solid rgba(255,255,255,0.2)',top:'-80px',left:'-80px',animation:'rotateSlow 18s linear infinite'}}></div>
           <div style={{position:'absolute',width:'220px',height:'220px',borderRadius:'50%',border:'1.5px solid rgba(255,255,255,0.15)',bottom:'-60px',right:'-60px',animation:'rotateSlow 22s linear infinite reverse'}}></div>
           <div style={{display:'flex',alignItems:'center',gap:16,marginBottom:20}}>
-            <div className="logo-shield" style={{width:'120px',height:'120px',background:'rgba(255,255,255,0.15)',backdropFilter:'blur(4px)',borderRadius:'24px',border:'2px solid rgba(255,255,255,0.5)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 8px 20px rgba(0,0,0,0.3)'}}>
-              <img src="/images/NCCIA.webp" alt="NCCIA Logo" style={{width:'130px',height:'130px',objectFit:'cover',borderRadius:'22px'}} />
+            <div className="logo-shield" style={{width:'144px',height:'144px',padding:'10px',boxSizing:'border-box',flexShrink:0,background:'rgba(255,255,255,0.15)',backdropFilter:'blur(4px)',borderRadius:'24px',border:'2px solid rgba(255,255,255,0.5)',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 8px 20px rgba(0,0,0,0.3)'}}>
+              <img src="/images/NCCIA.webp" alt="NCCIA Logo" style={{width:'100%',height:'100%',objectFit:'contain',display:'block'}} />
             </div>
           </div>
           <div className="brand-name" style={{fontFamily:"'Playfair Display', serif",fontSize:'1.8rem',fontWeight:700,letterSpacing:'.06em',color:'#fff',textShadow:'0 2px 8px rgba(0,0,0,0.3)',textAlign:'center'}}>NCCIA</div>
