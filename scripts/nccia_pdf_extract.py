@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Extract NCCIA/FIA verification report fields from complaint PDFs.
 
-Compatible with Python 3.6+ (shared hosting).
+Requires Python 3.10+ for supported, patched OCR dependencies.
 """
 
 import io
@@ -558,6 +558,10 @@ def parse_verification_report(text, filename):
 
 
 def main():
+    if sys.version_info < (3, 10):
+        print(json.dumps({"error": "Python 3.10 or newer is required for PDF extraction."}))
+        return 2
+
     if len(sys.argv) < 2:
         print(json.dumps({"error": "Usage: nccia_pdf_extract.py <pdf_path>"}))
         return 1
