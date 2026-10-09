@@ -20,6 +20,13 @@ import {
 import { SIMPLE_STATUSES, PRIORITY_OPTIONS, toSimpleStatus, fromSimpleStatus, isSubmittedToCircle } from '../utils/simpleStatus';
 import { isSeizeItemLocked, activityHasLockedSeizeItems, applyForensicLocksToActivities, seizeItemKey, lockSeizeItemsAgainstForensic } from '../utils/seizeItemLock';
 
+const responseArray = (data, endpoint) => {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.data)) return data.data;
+  console.error(`Unexpected ${endpoint} response: expected an array.`);
+  return [];
+};
+
 const ENQUIRY_STATUS = [
   { value: 'registered', name: 'Registered (Reader Branch)' },
   { value: 'assigned', name: 'Assigned to IO' },
@@ -672,10 +679,10 @@ export default function EnquiryForm() {
   const transferCircleName = circles.find(c => String(c.id) === String(form.transfer_circle) || c.name === form.transfer_circle)?.name || '';
 
   useEffect(() => {
-    api.get('/complaints?status=complete').then(r => setComplaints(r.data.data || r.data)).catch(() => {});
+    api.get('/complaints?status=complete').then(r => setComplaints(responseArray(r.data, '/complaints?status=complete'))).catch(error => console.error('Failed to load complaints for enquiry:', error));
     api.get('/lookup/enquiry-officers').then(r => { const d = r.data.data || r.data; setOfficers((Array.isArray(d) ? d : []).map(o => ({ value: o.id, name: o.name + (o.designation ? ' (' + o.designation + ')' : '') }))); }).catch(() => {});
-    api.get('/lookup/legal-officers').then(r => setLegalOfficers(r.data.data || r.data)).catch(() => {});
-    api.get('/lookup/circles').then(r => setCircles(r.data.data || r.data)).catch(() => {});
+    api.get('/lookup/legal-officers').then(r => setLegalOfficers(responseArray(r.data, '/lookup/legal-officers'))).catch(error => console.error('Failed to load legal officers for enquiry:', error));
+    api.get('/lookup/circles').then(r => setCircles(responseArray(r.data, '/lookup/circles'))).catch(error => console.error('Failed to load circles for enquiry:', error));
     api.get('/lookup/circle-incharges').then(r => { const d = r.data.data || r.data; setCircleIncharges(Array.isArray(d) ? d : []); }).catch(() => {});
     if (canRegisterCaseFromEnquiry(user)) {
       api.get('/lookup/investigation-officers').then(r => {
@@ -3765,5 +3772,4 @@ export default function EnquiryForm() {
     </div>
   );
 }
-
 
