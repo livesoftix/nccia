@@ -1,0 +1,311 @@
+{
+  "schema_version": "1.0",
+  "prepared_on": "2026-10-08",
+  "timezone": "Asia/Karachi",
+  "overall_status": "adoption-and-verification-incomplete",
+  "certification_claim": false,
+  "note": "Written artifacts and code support adoption; they do not establish conformance or certification.",
+  "corrections": [
+    "Repeated user items12/15/16/17 are counted once.",
+    "Item5 is ISO/IEC TS27034-5-1:2018, not ISO/IEC27034-4:2018.",
+    "Item6 is a deleted unpublished project.",
+    "SSDF1.2 is initial public draft, distinct from final1.1 at preparation."
+  ],
+  "items": [
+    {
+      "requested_item": 1,
+      "reference": "ISO/IEC 27001:2022",
+      "kind": "organizational-management-system",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "governance.md",
+        "risk-register.json",
+        "soa-register.json"
+      ],
+      "required_evidence": "Approve ISMS scope/policies/roles, risk treatment/SoA, competence, internal audit, management review and corrective actions. Independent certification required if claimed.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.iso.org/standard/27001"
+      ]
+    },
+    {
+      "requested_item": 2,
+      "reference": "ISO/IEC 27034-1:2011",
+      "kind": "concepts-and-guidance",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "application-security-framework.md"
+      ],
+      "required_evidence": "Licensed concepts review and organization adoption; conceptual guidance is not an executable feature.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.iso.org/obp/ui#iso:std:iso-iec:27034:-1:ed-1:v1:en"
+      ]
+    },
+    {
+      "requested_item": 3,
+      "reference": "ISO/IEC 27034-2:2015",
+      "kind": "organization-normative-framework",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "application-security-framework.md"
+      ],
+      "required_evidence": "Named-owner approved ONF, lifecycle roles, requirement/control catalogue and adoption evidence.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.iso.org/obp/ui#iso:std:iso-iec:27034:-2:ed-1:v1:en"
+      ]
+    },
+    {
+      "requested_item": 4,
+      "reference": "ISO/IEC 27034-3:2018",
+      "kind": "application-security-management-process",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "application-security-framework.md",
+        "verification-plan.md"
+      ],
+      "required_evidence": "Approved context/risk/control selection and actual lifecycle/release verification records reviewed against licensed text.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.iso.org/obp/ui#iso:std:iso-iec:27034:-3:ed-1:v1:en"
+      ]
+    },
+    {
+      "requested_item": 5,
+      "reference": "ISO/IEC TS 27034-5-1:2018",
+      "kind": "normative-xml-exchange",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "controls.xml",
+        "controls.xsd",
+        "application-security-framework.md"
+      ],
+      "required_evidence": "Acquire official licensed normative XML schemas, review mapping and validate instances. Local format is custom and not equivalent.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.iso.org/standard/67741.html"
+      ]
+    },
+    {
+      "requested_item": 6,
+      "reference": "ISO/IEC 27034-4 (deleted project: Validation and verification)",
+      "kind": "deleted-unpublished-project",
+      "status": "deleted-unpublished-reference",
+      "artifacts": [
+        "verification-plan.md"
+      ],
+      "required_evidence": "No conformance claim against deleted unpublished project; use applicable published verification guidance.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://committee.iso.org/files/live/sites/jtc1sc27/files/resources/jtc1%20sc27%20SD11-%202025%20January.pdf"
+      ]
+    },
+    {
+      "requested_item": 7,
+      "reference": "ISO/IEC 27034-6:2016",
+      "kind": "case-study-guidance",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "application-security-framework.md"
+      ],
+      "required_evidence": "Review NCCIA-specific case studies against licensed guidance and retain actual scoped verification results.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.iso.org/obp/ui#iso:std:iso-iec:27034:-6:ed-1:v1:en"
+      ]
+    },
+    {
+      "requested_item": 8,
+      "reference": "ISO/IEC 27034-7:2018",
+      "kind": "assurance-prediction-framework",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "assurance-model.json",
+        "application-security-framework.md"
+      ],
+      "required_evidence": "Licensed framework review and independently validated PASR if used; local metrics do not replace required verification.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.iso.org/standard/66229.html"
+      ]
+    },
+    {
+      "requested_item": 9,
+      "reference": "OWASP Developer Guide",
+      "kind": "secure-development-guidance",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "verification-plan.md"
+      ],
+      "required_evidence": "Adopt developer rules, train developers and retain architecture/change/security review evidence.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://owasp.org/projects/developer-guide"
+      ]
+    },
+    {
+      "requested_item": 10,
+      "reference": "OWASP Code Review Guide",
+      "kind": "secure-code-review-guidance",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "verification-plan.md"
+      ],
+      "required_evidence": "Independent source/sink/access review records, findings and retests for exact changes.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://owasp.org/projects/code-review-guide"
+      ]
+    },
+    {
+      "requested_item": 11,
+      "reference": "OWASP Web Security Testing Guide v4.2",
+      "kind": "testing-guidance",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "verification-plan.md"
+      ],
+      "required_evidence": "Approve full scenario applicability and execute scoped tests. Development v5.0 is not the pinned stable assessment baseline.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://owasp.org/projects/web-security-testing-guide"
+      ]
+    },
+    {
+      "requested_item": 12,
+      "reference": "OWASP ASVS 5.0.0",
+      "kind": "application-requirements",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "asvs-5-checklist.json",
+        "verification-plan.md"
+      ],
+      "required_evidence": "Approve level/applicability and verify every adopted requirement with evidence, including risk-selected L3.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://github.com/OWASP/ASVS/releases/tag/v5.0.0_release"
+      ]
+    },
+    {
+      "requested_item": 13,
+      "reference": "NIST SSDF 1.1 final; 1.2 initial public draft",
+      "kind": "development-process",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "verification-plan.md"
+      ],
+      "required_evidence": "Approve final-baseline task mapping and retain actual SDLC evidence; review 1.2 draft delta separately.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://csrc.nist.gov/Projects/ssdf/publications"
+      ]
+    },
+    {
+      "requested_item": 14,
+      "reference": "OWASP SAMM v2",
+      "kind": "maturity-assessment",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "verification-plan.md"
+      ],
+      "required_evidence": "Organization interviews and practice/stream scores with evidence, approved targets and improvement tracking.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://owaspsamm.org/model/"
+      ]
+    },
+    {
+      "requested_item": 15,
+      "reference": "CIS Controls v8.1",
+      "kind": "enterprise-safeguards",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "operations-runbook.md"
+      ],
+      "required_evidence": "Select implementation group and assess every applicable safeguard with organization/endpoint/production evidence.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.cisecurity.org/controls/v8-1"
+      ]
+    },
+    {
+      "requested_item": 16,
+      "reference": "CSA Cloud Controls Matrix v4.1",
+      "kind": "cloud-controls",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "operations-runbook.md"
+      ],
+      "required_evidence": "Actual provider/service model, complete control applicability/responsibility matrix and scoped customer/provider evidence.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://cloudsecurityalliance.org/artifacts/cloud-controls-matrix-v4-1"
+      ]
+    },
+    {
+      "requested_item": 17,
+      "reference": "NIST SP 800-53 Rev.5 (catalogue release 5.2.0)",
+      "kind": "security-and-privacy-control-catalogue",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "operations-runbook.md"
+      ],
+      "required_evidence": "Approve baseline/parameters/enhancements/tailoring, system security plan and 800-53A assessment results.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+      ]
+    },
+    {
+      "requested_item": 18,
+      "reference": "CIS Benchmarks for actual OS, DBMS and application server",
+      "kind": "deployment-hardening-benchmarks",
+      "status": "pending-owner-adoption-and-verification",
+      "artifacts": [
+        "operations-runbook.md"
+      ],
+      "required_evidence": "Inventory actual platform/version; select exact benchmark/profile; retain scans/manual checks and approved exceptions.",
+      "assigned_owner": null,
+      "approved_on": null,
+      "evidence": [],
+      "sources": [
+        "https://www.cisecurity.org/cis-benchmarks"
+      ]
+    }
+  ]
+}

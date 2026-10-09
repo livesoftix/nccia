@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogue xmlns="urn:nccia:security:asc:1" version="0.1" preparedOn="2026-10-08" application="NCCIA CMS" schemaStatus="custom-project-schema-not-iso">
+  <disclaimer>Custom NCCIA project exchange; not the normative ISO/IEC TS27034-5-1 schema. Role assignments/adoption and scoped verification pending. Source candidates are not passed evidence.</disclaimer>
+  <control id="ASC-AUTH" status="code-observed" ownerRole="application owner" verifierRole="independent security verifier">
+    <objective>Authenticate identities and protect sessions/factors</objective>
+    <securityActivity>Implement approved MFA, password, recovery, throttling and session requirements</securityActivity>
+    <verificationActivity>Exercise factor enrollment/challenge/recovery, replay, rate limits, expiry and revocation; inspect secret handling</verificationActivity>
+    <acceptance>Every adopted authentication/session requirement passes for exact release scope</acceptance>
+    <threat>T01</threat>
+    <evidence type="source-candidate">app/Http/Controllers/Auth/LoginController.php</evidence>
+    <evidence type="source-candidate">app/Http/Controllers/Auth/MfaController.php</evidence>
+    <evidence type="source-candidate">app/Http/Middleware/EnforceAccountSecurity.php</evidence>
+    <evidence type="source-candidate">app/Services/TotpService.php</evidence>
+    <evidence type="source-candidate">tests/Feature/AccountSecurityTest.php</evidence>
+  </control>
+  <control id="ASC-AUTHZ" status="code-observed" ownerRole="application owner" verifierRole="independent security verifier">
+    <objective>Protect role, circle, object and field access</objective>
+    <securityActivity>Enforce server-side policies and scope on every read/write/export/file action</securityActivity>
+    <verificationActivity>Execute positive/negative role-circle-object-field matrix including guessed IDs</verificationActivity>
+    <acceptance>Forbidden access fails and legitimate access succeeds on all inventoried endpoints</acceptance>
+    <threat>T02</threat>
+    <threat>T03</threat>
+    <evidence type="source-candidate">app/Policies</evidence>
+    <evidence type="source-candidate">tests/Feature/CircleIsolationTest.php</evidence>
+    <evidence type="source-candidate">tests/Feature/SecurityRegressionTest.php</evidence>
+  </control>
+  <control id="ASC-FILE" status="code-observed" ownerRole="application and operations owners" verifierRole="independent security verifier">
+    <objective>Accept/process/serve files safely</objective>
+    <securityActivity>Validate content/type/size; generate paths; private storage; scanner and safe downloads</securityActivity>
+    <verificationActivity>Test executable/spoofed/traversal/oversized/malformed uploads and direct/unauthorized retrieval</verificationActivity>
+    <acceptance>Allowed safe files work; unsafe access/processing denied; production storage cannot execute uploads</acceptance>
+    <threat>T04</threat>
+    <threat>T05</threat>
+    <evidence type="source-candidate">app/Http/Requests</evidence>
+    <evidence type="source-candidate">app/Services/SecureFileService.php</evidence>
+    <evidence type="source-candidate">app/Http/Controllers/SecureFileController.php</evidence>
+  </control>
+  <control id="ASC-INPUT" status="pending-verification" ownerRole="application owner" verifierRole="independent security verifier">
+    <objective>Prevent interpreter injection</objective>
+    <securityActivity>Parameterized data/process calls and context-specific output encoding</securityActivity>
+    <verificationActivity>Review all query/command/render/URL sinks and execute hostile payload tests</verificationActivity>
+    <acceptance>Untrusted data cannot change interpreter execution or output context</acceptance>
+    <threat>T06</threat>
+    <evidence type="source-candidate">app/Http/Controllers</evidence>
+    <evidence type="source-candidate">react-app/src</evidence>
+  </control>
+  <control id="ASC-IMPORT" status="pending-verification" ownerRole="application and operations owners" verifierRole="independent security verifier">
+    <objective>Constrain hostile document parsing</objective>
+    <securityActivity>Quarantine and resource/isolation/network limits for PDF/OCR</securityActivity>
+    <verificationActivity>Malformed/oversize and failure tests with CPU/memory/output/concurrency observation</verificationActivity>
+    <acceptance>Bounded safe failure without evidence leakage or service exhaustion</acceptance>
+    <threat>T05</threat>
+    <threat>T06</threat>
+    <evidence type="source-candidate">scripts/nccia_pdf_extract.py</evidence>
+    <evidence type="source-candidate">app/Http/Controllers/ComplaintPdfImportController.php</evidence>
+  </control>
+  <control id="ASC-AUDIT" status="code-observed" ownerRole="application and operations owners" verifierRole="independent security verifier">
+    <objective>Preserve verifiable event history</objective>
+    <securityActivity>Encrypt restricted payloads; authenticate v2 metadata; serialize and anchor audit chain</securityActivity>
+    <verificationActivity>Tamper/deletion/reorder/concurrency tests, old-chain verification and independent checkpoint checks</verificationActivity>
+    <acceptance>Altered/missing records detected and alerted; key/writer/checkpoint controls verified</acceptance>
+    <threat>T07</threat>
+    <evidence type="source-candidate">app/Services/AuditLedgerService.php</evidence>
+    <evidence type="source-candidate">tests/Feature/SecurityRegressionTest.php</evidence>
+  </control>
+  <control id="ASC-INTEGRITY" status="code-observed" ownerRole="application owner" verifierRole="independent security verifier">
+    <objective>Protect workflow and concurrent edits</objective>
+    <securityActivity>Server handoff locks, approved corrections and version/concurrency checks</securityActivity>
+    <verificationActivity>Role-transition/stale update and atomic transaction tests</verificationActivity>
+    <acceptance>No unauthorized post-handoff change or stale overwrite; audited correction succeeds</acceptance>
+    <threat>T08</threat>
+    <evidence type="source-candidate">app/Models/Concerns</evidence>
+    <evidence type="source-candidate">app/Policies</evidence>
+    <evidence type="source-candidate">tests/Feature/SecurityRegressionTest.php</evidence>
+  </control>
+  <control id="ASC-DATA" status="pending-verification" ownerRole="privacy and operations owners" verifierRole="independent privacy/security reviewer">
+    <objective>Minimize/protect restricted data</objective>
+    <securityActivity>Approved classification/retention/encryption/key/provider disclosure policy</securityActivity>
+    <verificationActivity>Review data/log/export/provider flows and actual storage/key configuration</verificationActivity>
+    <acceptance>Approved data handling enforced with verified encryption/disclosure/retention scope</acceptance>
+    <threat>T09</threat>
+    <threat>T12</threat>
+    <evidence type="source-candidate">docs/security/governance.md</evidence>
+  </control>
+  <control id="ASC-SUPPLY" status="pending-verification" ownerRole="developer and CI owners" verifierRole="independent security verifier">
+    <objective>Protect source/dependencies/releases</objective>
+    <securityActivity>Reviewed lockfile build, secret/SCA/code checks, artifact integrity and triage</securityActivity>
+    <verificationActivity>Inspect exact release scans/SBOM/provenance and exception approvals</verificationActivity>
+    <acceptance>No unaccepted release findings; trusted reproducible scoped artifacts retained</acceptance>
+    <threat>T10</threat>
+    <evidence type="source-candidate">.github/workflows</evidence>
+    <evidence type="source-candidate">composer.lock</evidence>
+    <evidence type="source-candidate">react-app/package-lock.json</evidence>
+  </control>
+  <control id="ASC-RECOVERY" status="pending-verification" ownerRole="operations owner" verifierRole="independent recovery witness">
+    <objective>Recover consistent service/evidence</objective>
+    <securityActivity>Approved encrypted separated backup and recovery procedures</securityActivity>
+    <verificationActivity>Isolated restore with case/file/audit consistency and measured RTO/RPO</verificationActivity>
+    <acceptance>Approved recovery objectives met with retained independent exercise evidence</acceptance>
+    <threat>T11</threat>
+    <evidence type="source-candidate">docs/security/operations-runbook.md</evidence>
+  </control>
+  <control id="ASC-DEPLOY" status="pending-verification" ownerRole="operations owner" verifierRole="independent deployment assessor">
+    <objective>Harden actual production assets</objective>
+    <securityActivity>Exact-platform benchmark profiles, segmentation, TLS/patching and monitoring</securityActivity>
+    <verificationActivity>Host/database/server/cloud scans plus manual configuration evidence</verificationActivity>
+    <acceptance>All adopted deployment checks pass or have scoped approved exceptions</acceptance>
+    <threat>T12</threat>
+    <evidence type="source-candidate">docs/security/operations-runbook.md</evidence>
+  </control>
+</catalogue>

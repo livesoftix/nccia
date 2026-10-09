@@ -1,0 +1,29 @@
+/node_modules
+/vendor
+.env
+.env.*
+!.env.example
+cookies.txt
+/public/build
+/public/storage
+/storage/app/public
+/storage/framework
+/storage/logs
+.DS_Store
+react-build.zip
+package-lock.json
+yarn.lock
+# Commit lockfiles so security audits and builds use the same dependencies.
+!/package-lock.json
+!/react-app/package-lock.json
+!/mobile-app/package-lock.json
+node_modules
+/NCCIA/
+.phpunit.result.cache
+
+# Database dumps / backups must never be committed
+*.sql
+*.sqlite
+realerp_nccia.sql
+/security-reports/
+__pycache__/

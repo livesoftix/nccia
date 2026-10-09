@@ -1,0 +1,33 @@
+# systemd template; review host paths/network policy and systemd-analyze verify first.
+[Unit]
+Description=NCCIA Laravel queue worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nccia
+Group=nccia
+WorkingDirectory=/srv/nccia/current
+ExecStart=/usr/bin/php artisan queue:work --sleep=3 --tries=3 --timeout=120 --max-time=3600
+Restart=always
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/srv/nccia/shared/storage /srv/nccia/current/bootstrap/cache
+TimeoutStopSec=150
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target

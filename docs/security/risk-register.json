@@ -1,0 +1,377 @@
+{
+  "schema_version": "1.0",
+  "prepared_on": "2026-10-08",
+  "assessment_status": "initial-analyst-estimates-pending-owner-review",
+  "method": {
+    "likelihood_scale": [
+      1,
+      5
+    ],
+    "impact_scale": [
+      1,
+      5
+    ],
+    "score": "likelihood * impact",
+    "bands": {
+      "low": [
+        1,
+        4
+      ],
+      "moderate": [
+        5,
+        9
+      ],
+      "high": [
+        10,
+        14
+      ],
+      "critical": [
+        15,
+        25
+      ]
+    }
+  },
+  "risk_acceptance_authority": null,
+  "risks": [
+    {
+      "id": "R01",
+      "asset": "Accounts and restricted workflows",
+      "threat": "Credential theft or factor/recovery/session bypass",
+      "observed_condition": "Authentication source exists; expanded verification and MFA adoption pending",
+      "likelihood": 4,
+      "impact": 5,
+      "initial_score": 20,
+      "controls": [
+        "ASC-AUTH"
+      ],
+      "treatment": "Verify MFA/recovery/throttle/session requirements, privileged accounts, revocation and events",
+      "owner_role": "application + security",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R02",
+      "asset": "Cross-circle personal/case data",
+      "threat": "Unauthorized object/field/file/export access",
+      "observed_condition": "Policies/isolation/regression tests exist; full resource/action coverage pending",
+      "likelihood": 3,
+      "impact": 5,
+      "initial_score": 15,
+      "controls": [
+        "ASC-AUTHZ"
+      ],
+      "treatment": "Enumerate endpoints and verify role/circle/object/field matrix including files/reports",
+      "owner_role": "application + verifier",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R03",
+      "asset": "Evidence upload/parser boundary",
+      "threat": "Executable/spoofed/polyglot file or parser exploit",
+      "observed_condition": "Upload/private-download code observed; all features/scanner/parser limits pending",
+      "likelihood": 4,
+      "impact": 5,
+      "initial_score": 20,
+      "controls": [
+        "ASC-FILE",
+        "ASC-IMPORT"
+      ],
+      "treatment": "Unify file policy; validate contents/size/names; isolate parsers; scanner/quarantine; production no-execution checks",
+      "owner_role": "application + operations",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R04",
+      "asset": "Audit integrity",
+      "threat": "Mutation/deletion or complete-chain reconstruction",
+      "observed_condition": "Hash-chain service/regression exists; separation/independent anchoring pending",
+      "likelihood": 3,
+      "impact": 5,
+      "initial_score": 15,
+      "controls": [
+        "ASC-AUDIT"
+      ],
+      "treatment": "Verify deletion/reordering and protected external checkpoints; restrict writers; alert on failures",
+      "owner_role": "application + operations",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R05",
+      "asset": "Lifecycle integrity",
+      "threat": "Unauthorized post-handoff edits or stale overwrite",
+      "observed_condition": "Policies/concurrency tests observed; full transaction/workflow verification pending",
+      "likelihood": 3,
+      "impact": 4,
+      "initial_score": 12,
+      "controls": [
+        "ASC-INTEGRITY"
+      ],
+      "treatment": "Verify transitions and approved corrections atomically with correlated audit and concurrency tests",
+      "owner_role": "application + verifier",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R06",
+      "asset": "Source/components/build",
+      "threat": "Vulnerable dependency or compromised artifact",
+      "observed_condition": "Lockfiles/workflows exist; findings and provenance unverified",
+      "likelihood": 4,
+      "impact": 5,
+      "initial_score": 20,
+      "controls": [
+        "ASC-SUPPLY"
+      ],
+      "treatment": "SCA/code/secret checks, scoped advisory triage, retained SBOM/provenance and exact-lockfile build",
+      "owner_role": "developer + CI owner",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R07",
+      "asset": "Data and keys",
+      "threat": "Exposure of personal/evidence data or secrets",
+      "observed_condition": "Framework/configuration candidates; deployment encryption/key custody unknown",
+      "likelihood": 3,
+      "impact": 5,
+      "initial_score": 15,
+      "controls": [
+        "ASC-DATA",
+        "ASC-DEPLOY"
+      ],
+      "treatment": "Validate TLS/storage/backups/key custody and classification/retention",
+      "owner_role": "operations + privacy",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R08",
+      "asset": "Recovery",
+      "threat": "Ransomware/loss or unusable inconsistent backups",
+      "observed_condition": "Infrastructure proposal only; exercise/RTO/RPO pending",
+      "likelihood": 3,
+      "impact": 5,
+      "initial_score": 15,
+      "controls": [
+        "ASC-RECOVERY"
+      ],
+      "treatment": "Approve recovery objectives; encrypted separated backups; isolated consistent restore/integrity evidence",
+      "owner_role": "operations + sponsor",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R09",
+      "asset": "Host/database/network/cloud",
+      "threat": "Exposed services/debug or unsupported runtime",
+      "observed_condition": "Proposed topology/source settings; actual platform scans unknown",
+      "likelihood": 4,
+      "impact": 4,
+      "initial_score": 16,
+      "controls": [
+        "ASC-DEPLOY"
+      ],
+      "treatment": "Inventory platforms; approved benchmark profiles; segment ingress/egress; patch and monitor",
+      "owner_role": "operations",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R10",
+      "asset": "External providers",
+      "threat": "Wrong-recipient disclosure or supplier compromise",
+      "observed_condition": "Integrations observed; supplier/privacy/responsibility review pending",
+      "likelihood": 3,
+      "impact": 4,
+      "initial_score": 12,
+      "controls": [
+        "ASC-DATA"
+      ],
+      "treatment": "Approve supplier/disclosure scope; minimize data; verify recipients/logs/contracts",
+      "owner_role": "privacy + procurement",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R11",
+      "asset": "Input/report processing",
+      "threat": "Injection or unsafe rendering/URL/process arguments",
+      "observed_condition": "Validation/output code observed; complete source/sink review pending",
+      "likelihood": 3,
+      "impact": 5,
+      "initial_score": 15,
+      "controls": [
+        "ASC-INPUT",
+        "ASC-IMPORT"
+      ],
+      "treatment": "Review query/process/render/URL sinks; execute payload/failure/resource-limit tests",
+      "owner_role": "security + application",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    },
+    {
+      "id": "R12",
+      "asset": "Organizational oversight",
+      "threat": "Untreated risk or ineffective incident response",
+      "observed_condition": "New draft procedures; owners/training/exercises/audits pending",
+      "likelihood": 3,
+      "impact": 5,
+      "initial_score": 15,
+      "controls": [
+        "ASC-RECOVERY",
+        "ASC-DEPLOY"
+      ],
+      "treatment": "Adopt scope/roles/training/SLAs; incident tabletop, access review, internal audit and management review",
+      "owner_role": "ISMS + sponsor",
+      "assigned_owner": null,
+      "target_date": null,
+      "treatment_status": "pending-verification",
+      "evidence": [],
+      "residual_likelihood": null,
+      "residual_impact": null,
+      "residual_score": null,
+      "acceptance": {
+        "approved": false,
+        "approver": null,
+        "date": null,
+        "expiry": null,
+        "rationale": null
+      }
+    }
+  ]
+}

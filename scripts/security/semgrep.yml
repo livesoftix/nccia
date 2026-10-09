@@ -1,0 +1,102 @@
+rules:
+  - id: php-literal-secret-fallback
+    languages: [php]
+    message: Credentials must come from secret configuration without literal fallback values.
+    severity: ERROR
+    patterns:
+      - pattern-either:
+          - pattern: 'env($KEY, $SECRET)'
+          - pattern: 'env($KEY) ?? $SECRET'
+          - pattern: 'env($KEY) ?: $SECRET'
+          - pattern: 'getenv($KEY) ?: $SECRET'
+          - pattern: 'config($KEY, $SECRET)'
+          - pattern: 'config($KEY) ?? $SECRET'
+          - pattern: 'config($KEY) ?: $SECRET'
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: '(?i)["''].*(?:PASSWORD|SECRET|TOKEN|API_KEY|PRIVATE_KEY|APP_KEY).*'
+      - metavariable-regex:
+          metavariable: $SECRET
+          regex: '["''][^"'']+["'']'
+    metadata:
+      cwe: CWE-798
+      category: security
+
+  - id: php-no-dynamic-evaluation
+    languages: [php]
+    message: Dynamic code evaluation must not be used. Replace it with explicit operations.
+    severity: ERROR
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: create_function(...)
+    metadata:
+      cwe: CWE-95
+      category: security
+
+  - id: php-request-to-command
+    languages: [php]
+    message: Request input reaches a shell command. Use fixed executables and escaped arguments.
+    severity: ERROR
+    mode: taint
+    pattern-sources: &request_sources
+      - pattern-either:
+          - pattern: $_GET[...]
+          - pattern: $_POST[...]
+          - pattern: $_REQUEST[...]
+          - pattern: $REQUEST->input(...)
+          - pattern: $REQUEST->query(...)
+          - pattern: request($KEY, ...)
+    pattern-sanitizers:
+      - pattern: escapeshellarg(...)
+    pattern-sinks:
+      - pattern-either:
+          - pattern: exec($COMMAND, ...)
+          - pattern: shell_exec($COMMAND)
+          - pattern: system($COMMAND, ...)
+          - pattern: passthru($COMMAND, ...)
+    metadata:
+      cwe: CWE-78
+      category: security
+
+  - id: php-request-to-unserialize
+    languages: [php]
+    message: Do not deserialize PHP objects supplied by a request. Use JSON and validate the structure.
+    severity: ERROR
+    mode: taint
+    pattern-sources: *request_sources
+    pattern-sinks:
+      - pattern: unserialize(...)
+    metadata:
+      cwe: CWE-502
+      category: security
+
+  - id: php-request-to-raw-sql
+    languages: [php]
+    message: Request input reaches raw SQL. Use query bindings or the query builder.
+    severity: ERROR
+    mode: taint
+    pattern-sources: *request_sources
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: $QUERY->whereRaw($SQL, ...)
+              - pattern: $QUERY->selectRaw($SQL, ...)
+              - pattern: $QUERY->orderByRaw($SQL, ...)
+              - pattern: DB::unprepared($SQL, ...)
+              - pattern: DB::statement($SQL, ...)
+              - pattern: DB::select($SQL, ...)
+          - focus-metavariable: $SQL
+    metadata:
+      cwe: CWE-89
+      category: security
+
+  - id: javascript-no-dynamic-evaluation
+    languages: [javascript, typescript]
+    message: Avoid dynamic JavaScript evaluation. Use explicit functions or JSON.parse for data.
+    severity: ERROR
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+    metadata:
+      cwe: CWE-95
+      category: security

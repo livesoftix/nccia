@@ -1,0 +1,205 @@
+{
+  "schema_version": "1.0",
+  "prepared_on": "2026-10-08",
+  "timezone": "Asia/Karachi",
+  "scope": "Local uncommitted NCCIA CMS workspace; synthetic isolated tests and static/lockfile checks",
+  "standard_compliance_claim": false,
+  "production_or_independent_assessment": false,
+  "github_ci_execution": "not-run-remotely",
+  "results": [
+    {
+      "id": "VAL-PHP",
+      "status": "passed",
+      "reported_by": "root implementation agent",
+      "method": "php scripts/security/run-tests.php with isolated SQLite-in-memory test configuration",
+      "runtime": {
+        "php": "8.3.33",
+        "laravel": "12.69.3"
+      },
+      "tests": 66,
+      "assertions": 214,
+      "scope": "Full repository PHPUnit suite",
+      "limitations": [
+        "Local PHP8.3 only; configured PHP8.2 GitHub matrix not executed locally/remotely",
+        "No production database migration or data modification",
+        "Regression success is partial requirement evidence, not complete ASVS/ISO conformance"
+      ]
+    },
+    {
+      "id": "VAL-FRONTEND",
+      "status": "passed",
+      "reported_by": "root implementation agent",
+      "method": "React production build",
+      "limitations": [
+        "Compilation/build success does not establish browser security or production deployment effectiveness"
+      ],
+      "final_ui_build": "passed after MFA enrollment acknowledgment/error-handling changes",
+      "reported_output_asset": "public/react/assets/index-DGAc8Ah7.js"
+    },
+    {
+      "id": "VAL-LINT",
+      "status": "passed-with-warnings",
+      "reported_by": "root implementation agent",
+      "method": "npm frontend lint",
+      "exit_code": 0,
+      "limitations": [
+        "Existing warnings remain; not every warning is a security finding"
+      ]
+    },
+    {
+      "id": "VAL-DEPS",
+      "status": "passed",
+      "reported_by": "standards verification agent",
+      "method": "Composer locked audit and root/React/mobile npm audits",
+      "reported_findings": 0,
+      "limitations": [
+        "Point-in-time advisory database result; absence of known advisories does not establish absence of unknown vulnerabilities",
+        "Only local PHP8.3 platform executed; configured GitHub PHP8.2 matrix remains unexecuted"
+      ],
+      "php_audit_findings": 0,
+      "abandoned_packages": 0,
+      "npm_audit_findings": {
+        "root": 0,
+        "react": 0,
+        "mobile": 0
+      },
+      "manifest_validation": "composer validate --strict passed",
+      "platform_check": "PHP8.3.33 all requirements passed; configured platform target PHP8.2.0"
+    },
+    {
+      "id": "VAL-SBOM",
+      "status": "passed",
+      "reported_by": "standards verification agent",
+      "method": "Generated CycloneDX1.5 inventory validation against official schema and SBOM/secret-report validation tests",
+      "tests": 7,
+      "artifact": "security-reports/sbom.cdx.json",
+      "limitations": [
+        "Inventory/schema validation is not artifact provenance or independent supply-chain certification"
+      ],
+      "components": 584,
+      "format": "CycloneDX1.5",
+      "reproducibility": "deterministic inventory from lockfiles",
+      "official_schema_validation": "passed"
+    },
+    {
+      "id": "VAL-SAST-FIXTURES",
+      "status": "passed",
+      "reported_by": "standards verification agent",
+      "method": "Semgrep positive/negative fixtures",
+      "checks": 5,
+      "limitations": [
+        "Positive/negative rule fixtures demonstrate those five custom rules, not exhaustive vulnerability detection"
+      ]
+    },
+    {
+      "id": "VAL-SAST",
+      "status": "passed",
+      "reported_by": "standards verification agent",
+      "method": "Scoped PHP/JavaScript Semgrep scan",
+      "artifact": "security-reports/semgrep.json",
+      "limitations": [
+        "Custom rule coverage is limited; comprehensive manual review/DAST/pentest pending"
+      ],
+      "rules": 5,
+      "files": 280,
+      "parsing": "100% parsed",
+      "findings": 0
+    },
+    {
+      "id": "VAL-SECRETS",
+      "status": "passed-with-classified-history-candidates",
+      "reported_by": "standards verification agent",
+      "method": "Redacted worktree/history Gitleaks scan; strict decoded candidate classification",
+      "history_commits_reviewed": 436,
+      "classified_historical_session_envelopes": 13,
+      "actual_jwts_in_those_candidates": 0,
+      "limitations": [
+        "The 13 historical jwt-base64 candidates were strictly classified as encrypted Laravel session payloads with exact path/rule/span handling, not broad exclusion; synthetic real JWTs at the same filename remain blocking",
+        "Sensitive historical SQL/session exposure still requires responsible owner review; removing the current dump does not remove Git history/clones/backups",
+        "No production session response, credential rotation or history rewrite executed; classification does not prove universal absence of secrets"
+      ],
+      "current_worktree_paths": 682,
+      "current_worktree_mb": 60.71,
+      "current_worktree_leaks": 0,
+      "blocking_findings": 0,
+      "history_mb": 289.47
+    },
+    {
+      "id": "VAL-DOCS",
+      "status": "passed",
+      "reported_by": "documentation agent",
+      "method": "JSON/link/inventory/source-hash validation and .NET XML schema validation",
+      "checks": [
+        "18 numbered standards",
+        "93 unique AnnexA IDs",
+        "345 unique ASVS IDs and exact official descriptions",
+        "ASVS source SHA256 matches",
+        "12 risk score calculations",
+        "Local document links resolve",
+        "controls.xml validates against custom controls.xsd"
+      ],
+      "limitations": [
+        "Custom XSD is not normative ISO schema",
+        "Formal organizational policy/SoA adoption remains pending"
+      ]
+    },
+    {
+      "id": "VAL-REVIEW",
+      "status": "passed-for-two-fixes",
+      "reported_by": "documentation agent",
+      "method": "Read-only source and regression-test review",
+      "fixes": [
+        {
+          "finding": "Editable designation granted zonal authority",
+          "review": "User::isZonalHead now grants authority from assigned/validated roles only; operator 'Regional Director / Zonal Head' negative regression checks circle access",
+          "sources": [
+            "app/Models/User.php",
+            "tests/Feature/AccountSecurityTest.php"
+          ]
+        },
+        {
+          "finding": "MFA enrollment race during password authentication",
+          "review": "Consumed proof includes locked account ID/security_version; post-auth fresh state rechecks proof/version/factor and rejects changed account before marking session",
+          "sources": [
+            "app/Services/MfaService.php",
+            "app/Http/Controllers/Auth/LoginController.php",
+            "tests/Feature/AccountSecurityTest.php"
+          ]
+        }
+      ],
+      "limitations": [
+        "Focused review of reported issues; no claim of exhaustive independent application assessment"
+      ]
+    },
+    {
+      "id": "VAL-WORKFLOW",
+      "status": "passed-local-validation",
+      "reported_by": "standards verification agent",
+      "method": "actionlint1.7.12 on all three workflows plus whitespace check",
+      "workflows": 3,
+      "checks": [
+        "PR/push/manual/weekly security workflow",
+        "isolated PHP8.2/8.3 test matrix configured",
+        "Composer/npm audits and lockfile builds",
+        "SAST/secret scanning and SBOM generation",
+        "least-privilege permissions and pinned actions",
+        "Android workflow Node22.22/JDK21 and npm ci configuration reviewed"
+      ],
+      "limitations": [
+        "No remote GitHub workflow run",
+        "No Android APK compilation",
+        "Local PHP8.3 execution only; other workflow matrix/toolchain execution pending"
+      ]
+    }
+  ],
+  "remaining_external_evidence": [
+    "Named owner approval and ISMS operation/audit",
+    "Official licensed ISO clause/schema review",
+    "Approved ASVS applicability/target and complete requirement verification",
+    "Actual production benchmark/TLS/storage/cloud configuration",
+    "Backup/restore and incident tabletop execution",
+    "Independent application assessment/pentest",
+    "Historical secret/session exposure review and required revocation/rotation"
+  ],
+  "report_retention_note": "Local security-reports artifacts are ignored generated outputs. Retain protected copies and exact revision/job identifiers before release; agent-reported summaries here are not independently signed audit evidence."
+}

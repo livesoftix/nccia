@@ -1,0 +1,143 @@
+name: Security checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php-security:
+    name: PHP ${{ matrix.php }} tests and dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3']
+    env:
+      APP_ENV: testing
+      APP_DEBUG: 'false'
+      APP_URL: http://localhost
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ':memory:'
+      DB_URL: ''
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+      MAIL_MAILER: array
+      BROADCAST_CONNECTION: 'null'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@d52fc211a0436f8839a587b3b5b8efddab4744ea # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, dom, xml, gd, zip, fileinfo, pdo_sqlite, sodium
+          tools: composer:2.10.1
+          coverage: none
+      - name: Validate Composer manifest
+        run: composer validate --strict
+      - name: Install locked dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
+      - name: Check platform requirements
+        run: composer check-platform-reqs
+      - name: Audit PHP dependencies (no advisory exemptions)
+        run: composer audit --locked --no-interaction --abandoned=fail
+      - name: Run isolated tests with SQLite in memory
+        run: php scripts/security/run-tests.php
+
+  frontend-security:
+    name: JavaScript audits, lint and builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22.22.0'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            react-app/package-lock.json
+            mobile-app/package-lock.json
+      - name: Install locked JavaScript dependencies
+        run: |
+          npm ci --ignore-scripts
+          npm --prefix react-app ci --ignore-scripts
+          npm --prefix mobile-app ci --ignore-scripts
+      - name: Audit JavaScript dependencies (moderate and above)
+        run: |
+          npm audit --audit-level=moderate
+          npm --prefix react-app audit --audit-level=moderate
+          npm --prefix mobile-app audit --audit-level=moderate
+      - name: Lint application sources
+        run: npm --prefix react-app run lint
+      - name: Build backend and React assets
+        run: |
+          npm run build
+          npm --prefix react-app run build
+          npm --prefix react-app run build:mobile
+      - name: Validate Capacitor tooling
+        working-directory: mobile-app
+        run: npx --no-install cap --version
+
+  source-security:
+    name: Static analysis, secret scanning and SBOM
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SEMGREP_SEND_METRICS: 'off'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install pinned static analyzer
+        run: python3 -m pip install --disable-pip-version-check semgrep==1.180.0 opentelemetry-instrumentation-requests==0.58b0 opentelemetry-instrumentation-threading==0.58b0
+      - name: Verify security rules detect unsafe fixtures
+        run: |
+          semgrep scan --test --config scripts/security/semgrep.yml scripts/security/fixtures/semgrep.php --metrics=off --disable-version-check
+          semgrep scan --test --config scripts/security/semgrep.yml scripts/security/fixtures/semgrep.js --metrics=off --disable-version-check
+      - name: Scan PHP and JavaScript sources
+        run: |
+          mkdir -p security-reports
+          semgrep scan --config scripts/security/semgrep.yml --error --strict --metrics=off --disable-version-check --json-output security-reports/semgrep.json app routes config react-app/src
+      - name: Install verified secret scanner
+        if: ${{ !cancelled() }}
+        run: |
+          curl --fail --silent --show-error --location https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz --output "$RUNNER_TEMP/gitleaks.tar.gz"
+          echo '551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  '"$RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+      - name: Scan tracked and new worktree files for secrets (redacted)
+        if: ${{ !cancelled() }}
+        run: python3 scripts/security/scan-worktree.py --scanner "$RUNNER_TEMP/gitleaks"
+      - name: Scan complete Git history for secrets (redacted)
+        if: ${{ !cancelled() }}
+        run: python3 scripts/security/scan-history.py --scanner "$RUNNER_TEMP/gitleaks"
+      - name: Test and generate reproducible CycloneDX SBOM
+        if: ${{ !cancelled() }}
+        run: |
+          GITLEAKS_BIN="$RUNNER_TEMP/gitleaks" python3 -m unittest discover -s scripts/security/tests -v
+          python3 scripts/security/generate-sbom.py
+      - name: Save scan results and dependency inventory
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: security-reports
+          path: security-reports/
+          if-no-files-found: ignore
+          retention-days: 14

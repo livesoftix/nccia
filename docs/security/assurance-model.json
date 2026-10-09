@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "prepared_on": "2026-10-08",
+  "status": "proposed-evidence-measurement-model",
+  "standard_reference": "ISO/IEC27034-7:2018",
+  "iso_normative_model_conformance": "not-established-pending-licensed-review",
+  "prediction_substitutes_verification": false,
+  "pasr": {
+    "used": false,
+    "historical_dataset": null,
+    "model": null,
+    "independent_validation": null,
+    "approved_scope": null,
+    "uncertainty": null,
+    "owner_approval": null
+  },
+  "target": {
+    "asvs_version": "5.0.0",
+    "proposed_level": 2,
+    "risk_selected_l3": true,
+    "owner_approved": false
+  },
+  "metrics": [
+    {
+      "id": "M01",
+      "name": "Adopted ASVS verification",
+      "numerator": "Applicable adopted requirements with scoped passing evidence, verifier and date",
+      "denominator": "All adopted applicable requirements; unknown applicability remains backlog",
+      "baseline": null,
+      "target": "100% at approved release target",
+      "data_source": "asvs-5-checklist.json and protected evidence"
+    },
+    {
+      "id": "M02",
+      "name": "Unaccepted release findings",
+      "numerator": "Open critical/high findings without current sponsor-approved scoped exception",
+      "denominator": null,
+      "baseline": null,
+      "target": 0,
+      "data_source": "CI, assessment and risk findings"
+    },
+    {
+      "id": "M03",
+      "name": "Privileged access review",
+      "numerator": "Privileged identities with completed current access review",
+      "denominator": "All privileged identities in approved scope",
+      "baseline": null,
+      "target": "100% in adopted review period",
+      "data_source": "Protected account/review inventory"
+    },
+    {
+      "id": "M04",
+      "name": "Recovery effectiveness",
+      "numerator": "Consistent successful restores meeting approved RTO/RPO and integrity checks",
+      "denominator": "Scheduled scoped recovery exercises",
+      "baseline": null,
+      "target": "All required exercises successful; failures block acceptance",
+      "data_source": "Protected restore evidence"
+    },
+    {
+      "id": "M05",
+      "name": "Audit checkpoint verification",
+      "numerator": "Required chain/checkpoint checks with retained successful result",
+      "denominator": "Required scheduled checks",
+      "baseline": null,
+      "target": "100%; failures alerted/investigated",
+      "data_source": "Audit verifier and independently protected checkpoints"
+    },
+    {
+      "id": "M06",
+      "name": "Finding response timeliness",
+      "numerator": "Findings closed/retested within adopted severity response target",
+      "denominator": "Findings due during review period",
+      "baseline": null,
+      "target": "Owner-approved target pending",
+      "data_source": "Finding and exception register"
+    }
+  ],
+  "release_gates": [
+    "Sponsor-approved scope, roles, ASVS target and applicability",
+    "Exact commit/artifact/lockfiles and retained scan evidence",
+    "All adopted applicable requirements verified; failures/unknowns tracked",
+    "No unaccepted critical/high findings",
+    "Actual benchmark/TLS/storage/deployment and monitoring checks validated",
+    "Approved recovery objectives and successful scoped restore/rollback evidence",
+    "Independent review and sponsor release authorization"
+  ],
+  "latest_measurement": {
+    "release": null,
+    "commit": null,
+    "environment": null,
+    "measured_on": null,
+    "verifier": null,
+    "metrics": [],
+    "decision": "pending-verification",
+    "reviewer": null,
+    "sponsor": null,
+    "exceptions": []
+  },
+  "interpretation": "Evidence metrics are not breach probabilities or ISO assurance conformance. Null baseline means unmeasured, not zero risk or maturity."
+}

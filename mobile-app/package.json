@@ -1,0 +1,25 @@
+{
+  "name": "nccia-mobile-app",
+  "version": "2.4.1",
+  "description": "National Cyber Crime Investigation Agency (NCCIA) CMS - Native Android Mobile Application",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix ../react-app run build:mobile && cap sync android",
+    "sync": "cap sync android",
+    "copy": "cap copy android",
+    "open": "cap open android"
+  },
+  "overrides": {
+    "xcode": {
+      "uuid": "^11.1.1"
+    }
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/cli": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3"
+  }
+}

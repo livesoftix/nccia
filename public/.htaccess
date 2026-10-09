@@ -1,0 +1,75 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # ── Block direct public access to sensitive evidence folders ──────────
+    # These are served only through the authenticated /api/secure-file route.
+    # (CNIC scans, verification evidence, forensic files, imports, court reports.)
+    RewriteRule ^(?:storage|uploads)(?:/|$) - [F,L,NC]
+    # Deny accidental deployment of hidden metadata and backup/source files.
+    RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L]
+
+    # MIME types for modern JS/WASM/GZIP assets
+    <IfModule mod_mime.c>
+        AddType application/javascript .js .mjs
+        AddType application/wasm .wasm
+        AddType application/gzip .gz
+        AddType text/css .css
+    </IfModule>
+
+    # Block access to .env, .git, composer, package configs, sql backups, logs
+    <FilesMatch "(?i)^(\.env.*|\.git|composer\.(json|lock)|package(-lock)?\.json|artisan|phpunit\.xml.*|vite\.config\..*|.*\.(?:log|md|sql|bak|sh|py|ini|conf|zip|tar|gz|7z))$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Handle X-XSRF-Token Header
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Enterprise Security Headers
+    <IfModule mod_headers.c>
+        Header unset X-Powered-By
+        Header always unset X-Powered-By
+        Header always set X-Frame-Options "DENY"
+        Header always set X-Content-Type-Options "nosniff"
+        Header always set X-XSS-Protection "0"
+        Header always set Referrer-Policy "same-origin"
+        Header always set Permissions-Policy "camera=(self), microphone=(self), geolocation=(), payment=(), usb=()"
+        Header always set X-Permitted-Cross-Domain-Policies "none"
+
+        # Never cache SPA shell / version (so deploys appear without Ctrl+F5)
+        <FilesMatch "(index\.html|version\.json)$">
+            Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+            Header set Pragma "no-cache"
+            Header set Expires "0"
+        </FilesMatch>
+        <FilesMatch "^index\.html$">
+            Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://www.google.com/recaptcha/; frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+        </FilesMatch>
+    </IfModule>
+
+    # Long-cache hashed Vite assets (filename changes on every build)
+    <IfModule mod_headers.c>
+        <FilesMatch "\.(?:js|mjs|wasm|gz|css|woff2?|png|jpe?g|gif|webp|svg)$">
+            Header set Cache-Control "public, max-age=31536000, immutable"
+        </FilesMatch>
+    </IfModule>
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+</IfModule>

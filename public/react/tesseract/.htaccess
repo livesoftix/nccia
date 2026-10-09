@@ -1,0 +1,5 @@
+AddType application/javascript .js .mjs .wasm.js
+AddType application/wasm .wasm
+<IfModule mod_headers.c>
+  Header set Access-Control-Allow-Origin "*"
+</IfModule>

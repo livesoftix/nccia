@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Custom NCCIA format. NOT the official ISO/IEC TS 27034-5-1 normative schema. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:n="urn:nccia:security:asc:1" targetNamespace="urn:nccia:security:asc:1" elementFormDefault="qualified">
+  <xs:simpleType name="NonEmpty"><xs:restriction base="xs:token"><xs:minLength value="1"/></xs:restriction></xs:simpleType>
+  <xs:simpleType name="Status"><xs:restriction base="xs:string">
+    <xs:enumeration value="pending-verification"/><xs:enumeration value="code-observed"/><xs:enumeration value="verified"/><xs:enumeration value="failed"/><xs:enumeration value="not-applicable-approved"/>
+  </xs:restriction></xs:simpleType>
+  <xs:simpleType name="EvidenceType"><xs:restriction base="xs:string">
+    <xs:enumeration value="source-candidate"/><xs:enumeration value="test-run"/><xs:enumeration value="production-assessment"/><xs:enumeration value="policy-approved"/>
+  </xs:restriction></xs:simpleType>
+  <xs:element name="catalogue"><xs:complexType><xs:sequence>
+    <xs:element name="disclaimer" type="n:NonEmpty"/>
+    <xs:element name="control" minOccurs="1" maxOccurs="unbounded"><xs:complexType><xs:sequence>
+      <xs:element name="objective" type="n:NonEmpty"/>
+      <xs:element name="securityActivity" type="n:NonEmpty"/>
+      <xs:element name="verificationActivity" type="n:NonEmpty"/>
+      <xs:element name="acceptance" type="n:NonEmpty"/>
+      <xs:element name="threat" type="n:NonEmpty" minOccurs="1" maxOccurs="unbounded"/>
+      <xs:element name="evidence" minOccurs="0" maxOccurs="unbounded"><xs:complexType><xs:simpleContent><xs:extension base="n:NonEmpty">
+        <xs:attribute name="type" type="n:EvidenceType" use="required"/>
+      </xs:extension></xs:simpleContent></xs:complexType></xs:element>
+    </xs:sequence><xs:attribute name="id" type="xs:ID" use="required"/><xs:attribute name="status" type="n:Status" use="required"/><xs:attribute name="ownerRole" type="n:NonEmpty" use="required"/><xs:attribute name="verifierRole" type="n:NonEmpty" use="required"/></xs:complexType></xs:element>
+  </xs:sequence><xs:attribute name="version" type="n:NonEmpty" use="required"/><xs:attribute name="preparedOn" type="xs:date" use="required"/><xs:attribute name="application" type="n:NonEmpty" use="required"/><xs:attribute name="schemaStatus" use="required" fixed="custom-project-schema-not-iso"/></xs:complexType></xs:element>
+</xs:schema>

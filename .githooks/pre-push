@@ -1,0 +1,21 @@
+#!/bin/sh
+# ==============================================================================
+# NCCIA CMS Local Security Guard: Remote Push Protection Hook
+# ==============================================================================
+
+CURRENT_EMAIL=$(git config user.email)
+
+# Authorized developer email check
+if [ "$CURRENT_EMAIL" != "nccia@real-erp.net" ]; then
+  echo ""
+  echo "======================================================================"
+  echo "❌ PUSH BLOCKED: UNAUTHORIZED PUSH ATTEMPT"
+  echo "----------------------------------------------------------------------"
+  echo "Current git user.email: '$CURRENT_EMAIL'"
+  echo "Only Engr. Humayun (nccia@real-erp.net) can push code to remote branches."
+  echo "======================================================================"
+  echo ""
+  exit 1
+fi
+
+exit 0

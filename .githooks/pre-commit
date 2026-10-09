@@ -1,0 +1,22 @@
+#!/bin/sh
+# ==============================================================================
+# NCCIA CMS Local Security Guard: Author Verification Hook
+# ==============================================================================
+
+CURRENT_EMAIL=$(git config user.email)
+
+# Authorized developer email check
+if [ "$CURRENT_EMAIL" != "nccia@real-erp.net" ]; then
+  echo ""
+  echo "======================================================================"
+  echo "❌ ACCESS DENIED: UNAUTHORIZED DEVELOPER DETECTED"
+  echo "----------------------------------------------------------------------"
+  echo "Current git user.email: '$CURRENT_EMAIL'"
+  echo "This codebase is locked and proprietary."
+  echo "Only Engr. Humayun (nccia@real-erp.net) is authorized to make changes."
+  echo "======================================================================"
+  echo ""
+  exit 1
+fi
+
+exit 0

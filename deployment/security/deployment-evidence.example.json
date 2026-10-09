@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "checked_at": "REPLACE_WITH_UTC_ISO8601_AFTER_VERIFICATION",
+  "source_fingerprint": "REPLACE_WITH_STAGING_REPORT_FINGERPRINT_AFTER_SOURCE_VERIFICATION",
+  "runtime_permissions_verified": false,
+  "malware_definitions_current": false,
+  "backup_restore_verified": false,
+  "independent_audit_checkpoint_verified": false,
+  "historical_credentials_remediated": false
+}

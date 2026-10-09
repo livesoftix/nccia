@@ -1,0 +1,11 @@
+title = "NCCIA defaults plus literal SMTP password fallback detection"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "php-mail-password-fallback"
+description = "Non-empty literal password fallback for SMTP configuration"
+regex = '''(?i)(?:env|getenv|config)\s*\(\s*["'](?:MAIL_PASSWORD|SMTP_PASSWORD|mail\.mailers\.smtp\.password)["']\s*(?:,\s*|\)\s*(?:\?\?|\?:)\s*)["']([^"'\r\n]+)["']'''
+secretGroup = 1
+keywords = ["MAIL_PASSWORD", "SMTP_PASSWORD", "mail.mailers.smtp.password"]

@@ -1,0 +1,437 @@
+{
+	"info": {
+		"_postman_id": "nccia-enterprise-api-collection",
+		"name": "NCCIA API Collection",
+		"description": "Complete collection of all API endpoints for NCCIA (National Cyber Crime Investigation Agency).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://nccia.real-erp.net",
+			"type": "string"
+		},
+		{
+			"key": "email",
+			"value": "admin@admin.com",
+			"type": "string"
+		},
+		{
+			"key": "password",
+			"value": "password",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Authentication",
+			"item": [
+				{
+					"name": "Login (Main App)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Requested-With", "value": "XMLHttpRequest" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}"
+						},
+						"url": { "raw": "{{base_url}}/api/login", "host": ["{{base_url}}"], "path": ["api", "login"] }
+					}
+				},
+				{
+					"name": "Login (Forensic Portal)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "X-Requested-With", "value": "XMLHttpRequest" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@forensic.gov.pk\",\n    \"password\": \"password\"\n}"
+						},
+						"url": { "raw": "{{base_url}}/api/forensic/login", "host": ["{{base_url}}"], "path": ["api", "forensic", "login"] }
+					}
+				},
+				{
+					"name": "Security Alerts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" },
+							{ "key": "X-Requested-With", "value": "XMLHttpRequest" }
+						],
+						"url": { "raw": "{{base_url}}/api/security-alerts", "host": ["{{base_url}}"], "path": ["api", "security-alerts"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "2. Dashboard & Analytics",
+			"item": [
+				{
+					"name": "Dashboard Summary",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/dashboard", "host": ["{{base_url}}"], "path": ["api", "dashboard"] }
+					}
+				},
+				{
+					"name": "Analytics Metrics",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/analytics", "host": ["{{base_url}}"], "path": ["api", "analytics"] }
+					}
+				},
+				{
+					"name": "Sidebar Counts",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/sidebar-counts", "host": ["{{base_url}}"], "path": ["api", "sidebar-counts"] }
+					}
+				},
+				{
+					"name": "Department Progress",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/department-progress", "host": ["{{base_url}}"], "path": ["api", "department-progress"] }
+					}
+				},
+				{
+					"name": "Global Search",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/search?q=complaint", "host": ["{{base_url}}"], "path": ["api", "search"], "query": [{"key": "q", "value": "complaint"}] }
+					}
+				}
+			]
+		},
+		{
+			"name": "3. System Lookups",
+			"item": [
+				{
+					"name": "Professions",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/professions", "host": ["{{base_url}}"], "path": ["api", "lookup", "professions"] }
+					}
+				},
+				{
+					"name": "Received Via",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/received-via", "host": ["{{base_url}}"], "path": ["api", "lookup", "received-via"] }
+					}
+				},
+				{
+					"name": "Offence Types Lookup",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/offence-types", "host": ["{{base_url}}"], "path": ["api", "lookup", "offence-types"] }
+					}
+				},
+				{
+					"name": "Roles Lookup",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/roles", "host": ["{{base_url}}"], "path": ["api", "lookup", "roles"] }
+					}
+				},
+				{
+					"name": "Circles Lookup",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/circles", "host": ["{{base_url}}"], "path": ["api", "lookup", "circles"] }
+					}
+				},
+				{
+					"name": "Zones Lookup",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/zones", "host": ["{{base_url}}"], "path": ["api", "lookup", "zones"] }
+					}
+				},
+				{
+					"name": "Enquiry Officers",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/enquiry-officers", "host": ["{{base_url}}"], "path": ["api", "lookup", "enquiry-officers"] }
+					}
+				},
+				{
+					"name": "Verification Officers",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/verification-officers", "host": ["{{base_url}}"], "path": ["api", "lookup", "verification-officers"] }
+					}
+				},
+				{
+					"name": "Investigation Officers",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/lookup/investigation-officers", "host": ["{{base_url}}"], "path": ["api", "lookup", "investigation-officers"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "4. Complaints",
+			"item": [
+				{
+					"name": "List Complaints",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/complaints", "host": ["{{base_url}}"], "path": ["api", "complaints"] }
+					}
+				},
+				{
+					"name": "Search Complaints",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/complaints/search?query=test", "host": ["{{base_url}}"], "path": ["api", "complaints", "search"] }
+					}
+				},
+				{
+					"name": "PDF Imports Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/complaint-pdf-imports/stats", "host": ["{{base_url}}"], "path": ["api", "complaint-pdf-imports", "stats"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "5. Verifications",
+			"item": [
+				{
+					"name": "List Verifications",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/verifications", "host": ["{{base_url}}"], "path": ["api", "verifications"] }
+					}
+				},
+				{
+					"name": "Verification Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/verifications/stats", "host": ["{{base_url}}"], "path": ["api", "verifications", "stats"] }
+					}
+				},
+				{
+					"name": "Reports List",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/verifications/reports-list", "host": ["{{base_url}}"], "path": ["api", "verifications", "reports-list"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "6. Enquiries",
+			"item": [
+				{
+					"name": "List Enquiries",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/enquiries", "host": ["{{base_url}}"], "path": ["api", "enquiries"] }
+					}
+				},
+				{
+					"name": "Enquiry Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/enquiries/stats", "host": ["{{base_url}}"], "path": ["api", "enquiries", "stats"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "7. Cases & Court",
+			"item": [
+				{
+					"name": "List DAC Cases",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/cases", "host": ["{{base_url}}"], "path": ["api", "cases"] }
+					}
+				},
+				{
+					"name": "List Court Cases",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/court-cases", "host": ["{{base_url}}"], "path": ["api", "court-cases"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "8. Reports & DO Letters",
+			"item": [
+				{
+					"name": "List DSR Reports",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/dsr-reports", "host": ["{{base_url}}"], "path": ["api", "dsr-reports"] }
+					}
+				},
+				{
+					"name": "List DO Letters",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/do-letters", "host": ["{{base_url}}"], "path": ["api", "do-letters"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "9. Administration",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/users", "host": ["{{base_url}}"], "path": ["api", "users"] }
+					}
+				},
+				{
+					"name": "List Circles",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/circles", "host": ["{{base_url}}"], "path": ["api", "circles"] }
+					}
+				},
+				{
+					"name": "List Offence Types",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/offence-types", "host": ["{{base_url}}"], "path": ["api", "offence-types"] }
+					}
+				},
+				{
+					"name": "List Investigation Officers",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/investigation-officers", "host": ["{{base_url}}"], "path": ["api", "investigation-officers"] }
+					}
+				},
+				{
+					"name": "Login History Logs",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/login-history", "host": ["{{base_url}}"], "path": ["api", "login-history"] }
+					}
+				},
+				{
+					"name": "Login History Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/login-history/stats", "host": ["{{base_url}}"], "path": ["api", "login-history", "stats"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "10. Reference Data",
+			"item": [
+				{
+					"name": "Laws Library",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/laws", "host": ["{{base_url}}"], "path": ["api", "laws"] }
+					}
+				},
+				{
+					"name": "Rules Library",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/rules", "host": ["{{base_url}}"], "path": ["api", "rules"] }
+					}
+				},
+				{
+					"name": "SOPs Library",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/sops", "host": ["{{base_url}}"], "path": ["api", "sops"] }
+					}
+				},
+				{
+					"name": "User Manuals Library",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/user-manuals", "host": ["{{base_url}}"], "path": ["api", "user-manuals"] }
+					}
+				}
+			]
+		},
+		{
+			"name": "11. Forensic Laboratory",
+			"item": [
+				{
+					"name": "Forensic Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/forensic/stats", "host": ["{{base_url}}"], "path": ["api", "forensic", "stats"] }
+					}
+				},
+				{
+					"name": "Forensic Request Stats",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/forensic/request-stats", "host": ["{{base_url}}"], "path": ["api", "forensic", "request-stats"] }
+					}
+				},
+				{
+					"name": "Forensic Users",
+					"request": {
+						"method": "GET",
+						"header": [{ "key": "Accept", "value": "application/json" }, { "key": "X-Requested-With", "value": "XMLHttpRequest" }],
+						"url": { "raw": "{{base_url}}/api/forensic/users", "host": ["{{base_url}}"], "path": ["api", "forensic", "users"] }
+					}
+				}
+			]
+		}
+	]
+}
