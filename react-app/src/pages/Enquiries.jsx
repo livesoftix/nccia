@@ -82,7 +82,7 @@ export default function Enquiries() {
 
   const fetchData = useCallback((p = page) => {
     setLoading(true);
-    const params = { page: p };
+    const params = { page: p, per_page: 10 };
     if (search) params.search = search;
     if (statusFilter) params.status = STATUS_FILTERS[statusFilter] || statusFilter;
     api.get('/enquiries', { params }).then(r => {

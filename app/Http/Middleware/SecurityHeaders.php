@@ -70,11 +70,13 @@ class SecurityHeaders
         // print views retain inline handlers; they still disallow objects/framing.
         if (!$response->headers->has('Content-Security-Policy')) {
             $isSpa = str_starts_with((string) $request->route()?->getActionName(), SpaController::class . '@');
-            $script = $isSpa ? "'self'" : "'self' 'unsafe-inline' https://cdn.jsdelivr.net";
+            // 'wasm-unsafe-eval' lets the self-hosted OCR/PDF engines compile WebAssembly;
+            // it does not permit JavaScript eval().
+            $script = $isSpa ? "'self' 'wasm-unsafe-eval'" : "'self' 'unsafe-inline' https://cdn.jsdelivr.net";
             $script .= " https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/";
             $policy = str_starts_with((string) $response->headers->get('Content-Type'), 'application/json')
                 ? "default-src 'none'; frame-ancestors 'none'; base-uri 'none'"
-                : "default-src 'self'; script-src {$script}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://www.google.com/recaptcha/; frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'";
+                : "default-src 'self'; script-src {$script}; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://www.google.com/recaptcha/; frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; worker-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'";
             $response->headers->set('Content-Security-Policy', $policy);
         }
         if ($request->is('api/*') || $request->user()) {

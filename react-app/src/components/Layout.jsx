@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import PageErrorBoundary from './PageErrorBoundary';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../api';
 import { canView, hasRole, canCreateComplaint, canSeeDirectVerification, canSeeDirectEnquiry, canSeeDirectFir, canViewApprovalSettings, canUseWarrantRequests, canUseProclamations } from '../utils/permissions';
@@ -490,6 +491,12 @@ export default function Layout() {
                   <span>My Complaints</span>
                 </NavLink>
               </div>
+              <div className="nav-item">
+                <NavLink to="/complaints/ocr-imports" className="nav-link" data-page="ocr-imports">
+                  <span className="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11" cy="14" r="3"/><line x1="13.2" y1="16.2" x2="16" y2="19"/></svg></span>
+                  <span>OCR Import (Bulk)</span>
+                </NavLink>
+              </div>
             </>
           ) : (
             <>
@@ -516,6 +523,12 @@ export default function Layout() {
                   <NavLink to="/complaints/import-pdf" className="nav-link" data-page="complaint-pdf-import">
                     <span className="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
                     <span>Import PDF</span>
+                  </NavLink>
+                </div>
+                <div className="nav-item">
+                  <NavLink to="/complaints/ocr-imports" className="nav-link" data-page="ocr-imports">
+                    <span className="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11" cy="14" r="3"/><line x1="13.2" y1="16.2" x2="16" y2="19"/></svg></span>
+                    <span>OCR Import (Bulk)</span>
                   </NavLink>
                 </div>
                 <div className="nav-item">
@@ -1034,7 +1047,7 @@ export default function Layout() {
           </div>
         </header>
         <main className="page-content" id="pageContent" role="main">
-          <Outlet />
+          <PageErrorBoundary key={location.pathname}><Outlet /></PageErrorBoundary>
         </main>
       </div>
 

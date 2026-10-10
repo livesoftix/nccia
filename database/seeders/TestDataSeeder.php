@@ -12,6 +12,11 @@ class TestDataSeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->isProduction()) {
+            $this->command?->warn('Skipped TestDataSeeder: demo accounts and data are never seeded in production.');
+            return;
+        }
+
         $circles = Circle::all();
         $users = User::all();
         $statuses = ['complete', 'incomplete', 'invalid', 'irrelevant'];

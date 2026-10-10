@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
+import { readPage } from '../utils/pagination';
 import ConfirmModal from '../components/ConfirmModal';
 import LoadingSkeleton from '../components/LoadingSkeleton';
 import OfficerHandoverModal from '../components/OfficerHandoverModal';
@@ -48,18 +49,12 @@ export default function Users() {
 
   const fetchData = useCallback((p = page) => {
     setLoading(true);
-    api.get('/users', { params: { page: p } }).then(r => {
-      const d = r.data.data || r.data;
-      if (Array.isArray(d)) {
-        setList(d);
-      } else if (d?.data) {
-        setList(d.data);
-        setLastPage(d.last_page || 1);
-        setPage(d.current_page || 1);
-      } else {
-        setList([]);
-      }
-    }).finally(() => setLoading(false));
+    api.get('/users', { params: { page: p, per_page: 10 } }).then(r => {
+      const result = readPage(r.data);
+      setList(result.items);
+      setLastPage(result.lastPage);
+      setPage(result.page);
+    }).catch(() => setList([])).finally(() => setLoading(false));
   }, [page]);
 
   useEffect(() => { fetchData(); }, [fetchData]);

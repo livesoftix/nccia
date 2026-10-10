@@ -7,6 +7,7 @@ import CaseChatModal from '../components/CaseChatModal';
 import { useAutoRefresh } from '../utils/useAutoRefresh';
 import { useAuth } from '../contexts/AuthContext';
 import { canFillLegalAndApprove, CASE_CFR_REVIEW_STATUSES } from '../utils/permissions';
+import { readPage, PAGE_SIZE } from '../utils/pagination';
 
 export default function Cases() {
   const { user } = useAuth();
@@ -22,18 +23,12 @@ export default function Cases() {
 
   const fetchData = useCallback((p = page) => {
     setLoading(true);
-    api.get('/cases', { params: { page: p } }).then(r => {
-      const d = r.data.data || r.data;
-      if (Array.isArray(d)) {
-        setList(d);
-      } else if (d?.data) {
-        setList(d.data);
-        setLastPage(d.last_page || 1);
-        setPage(d.current_page || 1);
-      } else {
-        setList([]);
-      }
-    }).finally(() => setLoading(false));
+    api.get('/cases', { params: { page: p, per_page: PAGE_SIZE } }).then(r => {
+      const result = readPage(r.data);
+      setList(result.items);
+      setLastPage(result.lastPage);
+      setPage(result.page);
+    }).catch(() => setList([])).finally(() => setLoading(false));
   }, [page]);
 
   useEffect(() => { fetchData(); }, [fetchData]);

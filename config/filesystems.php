@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Private evidence is served only via the authenticated /api/secure-file route.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],

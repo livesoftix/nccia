@@ -359,7 +359,7 @@ class CaseFileController extends Controller
     {
         $query = CaseFile::visibleTo(request()->user())->with('enquiry', 'investigationOfficer');
 
-        $cases = $query->latest()->paginate(15);
+        $cases = $query->latest()->paginate(min(100, max(1, (int) request('per_page', 10))));
 
         if (request()->expectsJson()) {
             return response()->json($cases);
@@ -854,7 +854,7 @@ class CaseFileController extends Controller
             ->where('status', 'closed')
             ->with('enquiry', 'investigationOfficer')
             ->latest()
-            ->paginate(15);
+            ->paginate(min(100, max(1, (int) request('per_page', 10))));
 
         return response()->json($cases);
     }
@@ -915,7 +915,7 @@ class CaseFileController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print raid permission: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print raid permission: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -934,7 +934,7 @@ class CaseFileController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print search warrant: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print search warrant: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -953,7 +953,7 @@ class CaseFileController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print arrest warrant: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print arrest warrant: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -976,7 +976,7 @@ class CaseFileController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print forensic request: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print forensic request: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 

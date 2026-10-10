@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../api';
+import { printApiDocument } from '../utils/print';
 import { useAuth } from '../contexts/AuthContext';
 import {
   REPORT_STATUS_LABELS,
@@ -43,17 +44,24 @@ export default function DoLetterForm() {
   });
   const [loading, setLoading] = useState(!isCreate);
   const [busy, setBusy] = useState(false);
+  const [loadError, setLoadError] = useState('');
   const [remarks, setRemarks] = useState('');
   const [previewData, setPreviewData] = useState(null);
 
   const canEditMeta = isCreate || (canCompileAdminReports(user) && ['draft', 'sent_back'].includes(letter?.status));
 
   useEffect(() => {
-    api.get('/lookup/circles').then(r => setCircles(r.data || [])).catch(() => {});
+    api.get('/lookup/circles').then(r => {
+      const circles = Array.isArray(r.data) ? r.data : r.data?.data;
+      if (!Array.isArray(circles)) throw new Error('Invalid circle list response.');
+      setCircles(circles);
+    }).catch(() => setLoadError('Circle list could not load. Please refresh and try again.'));
   }, []);
 
   useEffect(() => {
     if (isCreate) return;
+    setLoading(true);
+    setLoadError('');
     api.get(`/do-letters/${id}`).then(r => {
       setLetter(r.data);
       setForm({
@@ -62,7 +70,7 @@ export default function DoLetterForm() {
         notes: r.data.notes || '',
       });
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => { setLoadError('This report could not load. Please refresh or return to the report list.'); setLoading(false); });
   }, [id, isCreate]);
 
   const save = async (recompile = false) => {
@@ -133,7 +141,7 @@ export default function DoLetterForm() {
   };
 
   const exportLetterHtml = () => {
-    window.open(`/api/do-letters/${id}/export?format=html`, '_blank');
+    printApiDocument(`/do-letters/${id}/export?format=html`);
   };
 
   if (loading) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>Loading...</div>;
@@ -146,6 +154,7 @@ export default function DoLetterForm() {
 
   return (
     <div className="page-content">
+      {loadError && <p role="alert" style={{color: '#b91c1c'}}>{loadError}</p>}
       <div className="page-header">
         <div className="page-title-group">
           <div className="page-label"><Link to="/do-letters">D.O. Letter</Link></div>

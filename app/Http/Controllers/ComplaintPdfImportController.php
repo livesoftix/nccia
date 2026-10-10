@@ -11,7 +11,7 @@ class ComplaintPdfImportController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ComplaintPdfImport::query()->with(['complaint', 'verificationReport', 'user'])
+        $query = ComplaintPdfImport::visibleTo($request->user())->with(['complaint', 'verificationReport', 'user'])
             ->latest('id');
 
         if ($batch = $request->query('batch_id')) {
@@ -25,9 +25,9 @@ class ComplaintPdfImportController extends Controller
         return response()->json($query->paginate(min(50, max(10, (int) $request->query('per_page', 15)))));
     }
 
-    public function stats()
+    public function stats(Request $request)
     {
-        $rows = ComplaintPdfImport::query()
+        $rows = ComplaintPdfImport::visibleTo($request->user())
             ->selectRaw('status, COUNT(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
@@ -113,6 +113,7 @@ class ComplaintPdfImportController extends Controller
             'ocr_text'   => 'required|string|min:20|max:500000',
         ]);
 
+        $this->ensureVisible($complaintPdfImport);
         $import = $service->process($complaintPdfImport, $request->input('ocr_text'));
 
         if ($request->boolean('auto_apply', true) && $import->status === ComplaintPdfImport::STATUS_EXTRACTED) {
@@ -155,13 +156,25 @@ class ComplaintPdfImportController extends Controller
         return ComplaintPdfImport::findOrFail($importId);
     }
 
+    /** Data isolation: an import is reachable only within the user's circle scope. */
+    private function ensureVisible(ComplaintPdfImport $import): void
+    {
+        abort_unless(
+            ComplaintPdfImport::visibleTo(request()->user())->whereKey($import->id)->exists(),
+            404
+        );
+    }
+
     public function show(ComplaintPdfImport $complaintPdfImport)
     {
+        $this->ensureVisible($complaintPdfImport);
+
         return response()->json($complaintPdfImport->load(['complaint', 'verificationReport', 'user']));
     }
 
     public function extract(Request $request, ComplaintPdfImport $complaintPdfImport, ComplaintPdfImportService $service)
     {
+        $this->ensureVisible($complaintPdfImport);
         $complaintPdfImport = $service->process($complaintPdfImport);
 
         return response()->json([
@@ -176,6 +189,7 @@ class ComplaintPdfImportController extends Controller
             'create_if_missing' => 'nullable|boolean',
         ]);
 
+        $this->ensureVisible($complaintPdfImport);
         $complaintPdfImport = $service->applyToSystem(
             $complaintPdfImport,
             $request->user(),

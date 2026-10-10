@@ -245,7 +245,7 @@ class DashboardController extends Controller
 
             return response()->json($payload);
         } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage(), 'line' => $e->getLine()], 500);
+            return response()->json(['message' => \App\Services\ClientError::message($e)], 500);
         }
     }
 

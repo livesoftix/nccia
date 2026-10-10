@@ -26,10 +26,7 @@ class CourtCaseController extends Controller
 
     public function show(CourtCase $courtCase)
     {
-        abort_unless(
-            CourtCase::visibleTo(request()->user())->whereKey($courtCase->id)->exists(),
-            404
-        );
+        $this->ensureVisible($courtCase);
 
         $courtCase->load(
             'caseFile.enquiry.complaint',
@@ -51,8 +48,8 @@ class CourtCaseController extends Controller
             'filing_date' => 'required|date',
         ]);
 
-        $courtCase = DB::transaction(function () use ($data) {
-            $caseFile = CaseFile::findOrFail($data['case_id']);
+        $courtCase = DB::transaction(function () use ($data, $request) {
+            $caseFile = CaseFile::visibleTo($request->user())->findOrFail($data['case_id']);
             $caseFile->update(['status' => 'in_progress']);
 
             return CourtCase::create([
@@ -82,6 +79,7 @@ class CourtCaseController extends Controller
             'filing_date' => 'sometimes|date',
         ]);
 
+        $this->ensureVisible($courtCase);
         $courtCase->update($data);
 
         return response()->json([
@@ -92,6 +90,7 @@ class CourtCaseController extends Controller
 
     public function destroy(CourtCase $courtCase)
     {
+        $this->ensureVisible($courtCase);
         $courtCase->hearings()->delete();
         $courtCase->reports()->delete();
         $courtCase->verdicts()->delete();
@@ -107,6 +106,8 @@ class CourtCaseController extends Controller
             'verdict_date' => 'required|date',
             'details'      => 'nullable|string|max:5000',
         ]);
+
+        $this->ensureVisible($courtCase);
 
         $verdict = DB::transaction(function () use ($data, $courtCase) {
             $verdict = $courtCase->verdicts()->create([
@@ -203,6 +204,7 @@ class CourtCaseController extends Controller
             'report_file' => 'required|file|max:20480|mimes:pdf,doc,docx',
         ]);
 
+        $this->ensureVisible($courtCase);
         $path = $request->file('report_file')->store('court-reports');
 
         $report = $courtCase->reports()->create([
@@ -215,5 +217,13 @@ class CourtCaseController extends Controller
             'message' => 'Report forwarded to court',
             'data'    => $report->load('submitter'),
         ], 201);
+    }
+    /** Data isolation: mutations must respect the same circle scope as show(). */
+    private function ensureVisible(CourtCase $courtCase): void
+    {
+        abort_unless(
+            CourtCase::visibleTo(request()->user())->whereKey($courtCase->id)->exists(),
+            404
+        );
     }
 }

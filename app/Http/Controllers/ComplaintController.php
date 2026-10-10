@@ -428,7 +428,7 @@ public function create()
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'DEBUG ERROR: ' . $e->getMessage() . ' at Line: ' . $e->getLine() . ' File: ' . $e->getFile()
+                'message' => 'Complaint could not be registered: ' . \App\Services\ClientError::message($e)
             ], 500);
         }
 
@@ -559,7 +559,7 @@ public function create()
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not generate slip: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not generate slip: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -579,7 +579,7 @@ public function create()
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not generate report: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not generate report: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 

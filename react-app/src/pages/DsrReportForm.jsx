@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../api';
+import { printApiDocument } from '../utils/print';
 import { useAuth } from '../contexts/AuthContext';
 import {
   REPORT_STATUS_LABELS,
@@ -110,17 +111,24 @@ export default function DsrReportForm() {
   });
   const [loading, setLoading] = useState(!isCreate);
   const [busy, setBusy] = useState(false);
+  const [loadError, setLoadError] = useState('');
   const [remarks, setRemarks] = useState('');
   const [previewData, setPreviewData] = useState(null);
 
   const canEditMeta = isCreate || (canCompileAdminReports(user) && ['draft', 'sent_back'].includes(report?.status));
 
   useEffect(() => {
-    api.get('/lookup/circles').then(r => setCircles(r.data || [])).catch(() => {});
+    api.get('/lookup/circles').then(r => {
+      const circles = Array.isArray(r.data) ? r.data : r.data?.data;
+      if (!Array.isArray(circles)) throw new Error('Invalid circle list response.');
+      setCircles(circles);
+    }).catch(() => setLoadError('Circle list could not load. Please refresh and try again.'));
   }, []);
 
   useEffect(() => {
     if (isCreate) return;
+    setLoading(true);
+    setLoadError('');
     api.get(`/dsr-reports/${id}`).then(r => {
       setReport(r.data);
       setForm({
@@ -130,7 +138,7 @@ export default function DsrReportForm() {
         notes: r.data.notes || '',
       });
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => { setLoadError('This report could not load. Please refresh or return to the report list.'); setLoading(false); });
   }, [id, isCreate]);
 
   const save = async (recompile = false) => {
@@ -203,7 +211,7 @@ export default function DsrReportForm() {
   };
 
   const exportReport = () => {
-    window.open(`/api/dsr-reports/${id}/export`, '_blank');
+    printApiDocument(`/dsr-reports/${id}/export`);
   };
 
   if (loading) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>Loading...</div>;
@@ -217,6 +225,7 @@ export default function DsrReportForm() {
 
   return (
     <div className="page-content">
+      {loadError && <p role="alert" style={{color: '#b91c1c'}}>{loadError}</p>}
       <div className="page-header">
         <div className="page-title-group">
           <div className="page-label"><Link to="/dsr-reports">DSR</Link></div>

@@ -20,8 +20,14 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             ReferenceDataSeeder::class,
             NcciaOfficesSeeder::class,
-            CircleTenancySeeder::class,
         ]);
+
+        if (app()->isProduction()) {
+            $this->command?->warn('Skipped demo users: demo accounts and data are never seeded in production.');
+            return;
+        }
+
+        $this->call(CircleTenancySeeder::class);
 
         $roles = [
             'admin',

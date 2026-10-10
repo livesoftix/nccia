@@ -1,0 +1,12 @@
+# NCCIA local OCR engine (python/nccia_ocr). Python 3.10+.
+# Verified locally with Python 3.11: PyMuPDF 1.27.2, OpenCV 4.13, NumPy 2.4, pytesseract 0.3.13, Pillow 12.2, Pydantic 2.13.
+PyMuPDF>=1.27,<1.29
+opencv-python-headless>=4.10,<5
+numpy>=1.26,<3
+pytesseract>=0.3.10,<0.4
+Pillow>=11,<13
+pydantic>=2.6,<3
+
+# Optional second engine (large download, models stored locally). Install only after benchmarking:
+# paddlepaddle>=2.6,<3
+# paddleocr>=2.8,<3

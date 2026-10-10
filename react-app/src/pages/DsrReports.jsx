@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../api';
+import Pagination from '../components/Pagination';
+import { readPage, PAGE_SIZE } from '../utils/pagination';
 import { useAuth } from '../contexts/AuthContext';
 import { canCompileAdminReports } from '../utils/adminReports';
 import { REPORT_STATUS_LABELS } from '../utils/adminReports';
@@ -9,27 +11,35 @@ export default function DsrReports() {
   const { user } = useAuth();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [error, setError] = useState('');
+  const [appliedFilters, setAppliedFilters] = useState({});
   const [filters, setFilters] = useState({ date_from: '', date_to: '' });
 
-  const load = () => {
+  const load = (targetPage = 1, selectedFilters = filters) => {
     setLoading(true);
-    const params = {};
-    if (filters.date_from) params.date_from = filters.date_from;
-    if (filters.date_to) params.date_to = filters.date_to;
+    setError('');
+    const params = { page: targetPage, per_page: PAGE_SIZE };
+    for (const [key, value] of Object.entries(selectedFilters)) {
+      if (value) params[key] = key.startsWith('month_') ? value + '-01' : value;
+    }
     api.get('/dsr-reports', { params }).then(r => {
-      setList(r.data.data || r.data);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+      const result = readPage(r.data);
+      setList(result.items);
+      setPage(result.page);
+      setLastPage(result.lastPage);
+      setAppliedFilters(selectedFilters);
+    }).catch(() => setError('Reports could not be loaded. Please retry.')).finally(() => setLoading(false));
   };
 
-  useEffect(() => {
-    load();
-  }, []);
+  useEffect(() => { load(); }, []);
 
   if (loading) return <div style={{ padding: 40, textAlign: 'center', color: '#888' }}>Loading...</div>;
 
   return (
     <div className="page-content">
+      {error && <p role="alert">{error}</p>}
       <div className="page-header">
         <div className="page-title-group">
           <div className="page-label">Administration</div>
@@ -55,14 +65,11 @@ export default function DsrReports() {
             <input type="date" value={filters.date_to} onChange={e => setFilters(f => ({ ...f, date_to: e.target.value }))} />
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button type="button" className="btn btn-primary btn-sm" onClick={load}>Filter</button>
+            <button type="button" className="btn btn-primary btn-sm" onClick={() => load(1)}>Filter</button>
             <button type="button" className="btn btn-sm" onClick={() => {
-              setFilters({ date_from: '', date_to: '' });
-              setLoading(true);
-              api.get('/dsr-reports').then(r => {
-                setList(r.data.data || r.data);
-                setLoading(false);
-              }).catch(() => setLoading(false));
+              const cleared = { date_from: '', date_to: '' };
+              setFilters(cleared);
+              load(1, cleared);
             }}>Clear</button>
           </div>
         </div>
@@ -97,6 +104,7 @@ export default function DsrReports() {
           </tbody>
         </table>
       </div>
+      <Pagination page={page} lastPage={lastPage} onChange={p => load(p, appliedFilters)} disabled={loading} />
     </div>
   );
 }

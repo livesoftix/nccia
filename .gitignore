@@ -27,3 +27,19 @@ node_modules
 realerp_nccia.sql
 /security-reports/
 __pycache__/
+
+# Runtime artefacts
+*.log
+*.pid
+
+# Python OCR engine virtualenv
+/python/.venv/
+
+# Uploaded evidence and local-only files (never commit)
+/public/uploads/
+/.claude/
+startup-log.txt
+start-nccia.bat
+*.blade.zip
+/app/Services/*.zip
+/database/*.bak-*

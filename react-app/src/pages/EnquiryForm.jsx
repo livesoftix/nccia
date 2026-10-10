@@ -698,7 +698,7 @@ export default function EnquiryForm() {
       setLinkedForensicRequests([]);
       api.get(`/enquiries/${id}`).then(r => {
         applyEnquiryPayload(r.data.data || r.data);
-      }).catch(() => navigate('/enquiries'));
+      }).catch(() => setServerError('Enquiry could not load. Please refresh or return to the enquiry list.'));
       loadLinkedForensicRequests(id);
     }
   }, [id, navigate]);
@@ -3772,4 +3772,3 @@ export default function EnquiryForm() {
     </div>
   );
 }
-

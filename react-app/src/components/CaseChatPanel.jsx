@@ -52,6 +52,7 @@ export default function CaseChatPanel({
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [sending, setSending] = useState(false);
   const scrollBottomRef = useRef(null);
 
@@ -62,12 +63,14 @@ export default function CaseChatPanel({
       const res = await api.get('/messages/case-thread', {
         params: { type, id, case_number: caseNumber },
       });
-      const list = Array.isArray(res.data) ? res.data : (res.data?.data || []);
+      const list = Array.isArray(res.data) ? res.data : res.data?.data;
+      if (!Array.isArray(list)) throw new Error('Invalid discussion response.');
       // Reverse to chronological order (oldest first, newest at bottom)
       const chrono = [...list].sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
       setMessages(chrono);
-    } catch {
-      // silent catch
+      setLoadError('');
+    } catch (error) {
+      setLoadError(error.response?.data?.message || 'Case discussion could not load. Please retry.');
     } finally {
       if (!silent) setLoading(false);
     }
@@ -192,6 +195,9 @@ export default function CaseChatPanel({
         display: 'flex',
         flexDirection: 'column',
       }}>
+        {loadError && <div role="alert" style={{ color: '#b91c1c', marginBottom: 12 }}>
+          {loadError} <button type="button" onClick={() => loadThread()}>Retry</button>
+        </div>}
         {loading && messages.length === 0 ? (
           <div style={{ textAlign: 'center', padding: 40, color: '#94a3b8', fontSize: 13 }}>
             Loading case discussions…

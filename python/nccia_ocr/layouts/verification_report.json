@@ -1,0 +1,210 @@
+{
+  "name": "verification_report",
+  "description": "NCCIA/FIA complaint verification report. Patterns adapted from scripts/nccia_pdf_extract.py.",
+  "detect": [
+    "verification\\s*report",
+    "complainant\\s*details",
+    "tracking\\s*n(?:o|umber)"
+  ],
+  "circle_patterns": [
+    "Cyber\\s*Crime\\s*Reporting\\s*Cent(?:er|re)[\\s,:\\-]+([A-Za-z][A-Za-z ]{2,30}?)\\s*(?:\\.|\\n|,|$)",
+    "(?:CCRC|Cyber\\s*Crime\\s*(?:Reporting\\s*)?Circle)[\\s,:\\-]+([A-Za-z][A-Za-z ]{2,30}?)(?:\\n|,|\\.|$)",
+    "Circle[\\s:\\-]+([A-Za-z][A-Za-z ]{2,30}?)(?:\\n|,|\\.|$)"
+  ],
+  "fields": [
+    {
+      "name": "tracking_no",
+      "type": "ref",
+      "required": false,
+      "patterns": [
+        "Tracking\\s*N(?:o|umber)[\\s.:\\-]+(CCW\\s*-\\s*[A-Z]{1,5}\\s*-\\s*[0-9][0-9 ]{1,9}\\s*/\\s*[0-9]{2,4})",
+        "\\b(CCW\\s*-\\s*[A-Z]{1,5}\\s*-\\s*[0-9]{3,8}\\s*/\\s*[0-9]{2,4})\\b"
+      ],
+      "format": "^CCW-[A-Z]{1,5}-[0-9]{3,8}/[0-9]{2,4}$"
+    },
+    {
+      "name": "inquiry_no",
+      "type": "ref",
+      "required": false,
+      "patterns": [
+        "\\b(E\\s*[/\\-]\\s*\\d+\\s*[/\\-]\\s*\\d{2,4})\\b",
+        "(?:Inquiry|Enquiry)\\s*No\\.?\\s*:?\\s*([A-Z0-9/\\-]{3,30})"
+      ],
+      "format": "^E/[0-9]{1,7}/[0-9]{2,4}$"
+    },
+    {
+      "name": "file_no",
+      "type": "ref",
+      "required": false,
+      "patterns": [
+        "File\\s*No\\.?[\\s.:\\-]+([A-Z0-9][A-Z0-9/\\-]{2,40})",
+        "Reference\\s*No\\.?[\\s.:\\-]+([A-Z0-9][A-Z0-9/\\-]{2,40})"
+      ]
+    },
+    {
+      "name": "victim_full_name",
+      "type": "text",
+      "required": true,
+      "max_len": 120,
+      "patterns": [
+        "COMPLAINANT\\s*DETAILS[\\s\\S]{0,80}?Name[\\s.:\\-]+(.+?)(?=\\s*(?:Gender|CNIC|Occupation|Contact|Mobile|\\n|$))",
+        "Complainant(?:'s)?\\s*Name[\\s.:\\-]+(.+?)(?=\\s*(?:Gender|CNIC|Occupation|Contact|Mobile|\\n|$))",
+        "^\\s*Name[\\s.:\\-]+(.+?)(?=\\s*(?:Gender|CNIC|Occupation|Contact|Mobile|\\n|$))"
+      ]
+    },
+    {
+      "name": "victim_father_name",
+      "type": "text",
+      "required": false,
+      "max_len": 120,
+      "patterns": [
+        "(?:Father|Husband|Guardian)(?:'s)?\\s*Name[\\s.:\\-]+(.+?)(?=\\s*(?:CNIC|Gender|Occupation|Contact|Mobile|\\n|$))"
+      ]
+    },
+    {
+      "name": "victim_gender",
+      "type": "text",
+      "required": false,
+      "max_len": 10,
+      "patterns": [
+        "Gender[\\s.:\\-]+(Male|Female|Other)\\b"
+      ]
+    },
+    {
+      "name": "victim_cnic",
+      "type": "cnic",
+      "required": true,
+      "patterns": [
+        "CNIC\\s*(?:No\\.?|Number)?[\\s.:\\-]*([0-9OoIlSBZ|]{5}[\\- ]?[0-9OoIlSBZ|]{7}[\\- ]?[0-9OoIlSBZ|])(?![0-9A-Za-z])"
+      ]
+    },
+    {
+      "name": "victim_phone",
+      "type": "phone",
+      "required": false,
+      "patterns": [
+        "Mobile\\s*(?:No\\.?|Number)?[\\s.:\\-]+(\\+?[0-9OoIlS][0-9OoIlS\\- ]{8,16}[0-9OoIlS])",
+        "Contact\\s*(?:Details|No\\.?|Number)?[\\s.:\\-]+(\\+?[0-9OoIlS][0-9OoIlS\\- ]{8,16}[0-9OoIlS])",
+        "Phone\\s*(?:No\\.?|Number)?[\\s.:\\-]+(\\+?[0-9OoIlS][0-9OoIlS\\- ]{8,16}[0-9OoIlS])"
+      ]
+    },
+    {
+      "name": "victim_email",
+      "type": "email",
+      "required": false,
+      "patterns": [
+        "E-?mail\\s*(?:Address)?[\\s.:\\-]+([A-Z0-9._%+\\-]+@[A-Z0-9.\\-]+\\.[A-Z]{2,})"
+      ]
+    },
+    {
+      "name": "victim_occupation",
+      "type": "text",
+      "required": false,
+      "max_len": 100,
+      "patterns": [
+        "Occupation[\\s.:\\-]+(.+?)(?=\\s*(?:Contact|Mobile|Address|Email|\\n|$))"
+      ]
+    },
+    {
+      "name": "victim_address",
+      "type": "text",
+      "required": false,
+      "max_len": 255,
+      "patterns": [
+        "Current\\s*Address[\\s.:\\-]+(.+?)(?=\\s*(?:Permanent|BRIEF|Brief|RECOMMEND|\\n\\s*\\n|$))",
+        "(?<!Permanent )Address[\\s.:\\-]+(.+?)(?=\\s*(?:Permanent|BRIEF|Brief|RECOMMEND|\\n\\s*\\n|$))"
+      ]
+    },
+    {
+      "name": "victim_permanent_address",
+      "type": "text",
+      "required": false,
+      "max_len": 255,
+      "patterns": [
+        "Permanent\\s*Address[\\s.:\\-]+(.+?)(?=\\s*(?:BRIEF|Brief|RECOMMEND|Contact|\\n\\s*\\n|$))"
+      ]
+    },
+    {
+      "name": "verification_date",
+      "type": "date",
+      "required": false,
+      "patterns": [
+        "Verification\\s*Date[\\s.:\\-]+([0-9]{1,2}[\\-/.][0-9]{1,2}[\\-/.][0-9]{2,4})"
+      ]
+    },
+    {
+      "name": "assignment_date",
+      "type": "date",
+      "required": false,
+      "patterns": [
+        "Assignment\\s*Date[\\s.:\\-]+([0-9]{1,2}[\\-/.][0-9]{1,2}[\\-/.][0-9]{2,4})"
+      ]
+    },
+    {
+      "name": "report_date",
+      "type": "date",
+      "required": false,
+      "patterns": [
+        "(?<![A-Za-z] )\\bDated[\\s.:\\-]+([0-9]{1,2}[\\-/.][0-9]{1,2}[\\-/.][0-9]{2,4})"
+      ]
+    },
+    {
+      "name": "crime_category",
+      "type": "text",
+      "required": false,
+      "max_len": 150,
+      "patterns": [
+        "Crime\\s*Categor(?:y|ies)[\\s.:\\-]+(.+?)(?=\\s*(?:accuse|City|Amount|\\n|$))",
+        "BRIEF\\s*DESCRIPTION\\s*&\\s*RECOMMENDATIONS?\\s*[\\n\\r]+([^\\n\\r]+)"
+      ]
+    },
+    {
+      "name": "crime_description",
+      "type": "text",
+      "required": false,
+      "max_len": 5000,
+      "patterns": [
+        "BRIEF\\s*DESCRIPTION[\\s\\S]{0,80}?((?:During|The|accuse)[\\s\\S]+?)(?=City\\s*of|Amount\\s*Involved|RECOMMEND|$)"
+      ]
+    },
+    {
+      "name": "city",
+      "type": "text",
+      "required": false,
+      "max_len": 80,
+      "patterns": [
+        "City\\s*of\\s*Occurrence[\\s.,:\\-]+([A-Za-z][A-Za-z ]{1,40}?)(?=\\s+[a-z]{1,4}\\s*$|\\s*(?:Complaint|Amount|RECOMMEND|BRIEF|\\n|$))"
+      ]
+    },
+    {
+      "name": "amount_involved",
+      "type": "amount",
+      "required": false,
+      "patterns": [
+        "Amount\\s*Involved[\\s.,:\\-]+(?:Rs\\.?|PKR)?\\s*([0-9][0-9,]*(?:\\.\\d+)?)",
+        "defrauded\\s+(?:Rs\\.?|PKR)\\s*([0-9][0-9,]*(?:\\.\\d+)?)"
+      ]
+    },
+    {
+      "name": "recommendation",
+      "type": "text",
+      "required": false,
+      "max_len": 200,
+      "patterns": [
+        "(Perm?i?ssion\\s+to\\s+Register\\s+Enq\\w{2,4}ry)",
+        "RECOMMENDATIONS?[\\s.:\\-]+((?:Permission|Closure|Merge|Transfer)[^\\n\\r]{0,150})"
+      ]
+    },
+    {
+      "name": "reporting_officer",
+      "type": "text",
+      "required": false,
+      "max_len": 80,
+      "patterns": [
+        "^\\s*([A-Z][A-Z .]{3,40}?)\\s*\\n\\s*(?:Assistant\\s+Sub\\s+Inspector|Sub\\s+Inspector|Inspector|Assistant\\s+Director|Deputy\\s+Director)\\b",
+        "Reporting\\s*Officer[\\s.:\\-]+(.+?)(?=\\s*(?:Designation|Rank|Signature|\\n|$))"
+      ]
+    }
+  ],
+  "primary_pages": 1
+}

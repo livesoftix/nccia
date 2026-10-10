@@ -16,6 +16,11 @@ class CircleTenancySeeder extends Seeder
 {
     public function run(): void
     {
+        if (app()->isProduction()) {
+            $this->command?->warn('Skipped CircleTenancySeeder: demo accounts and data are never seeded in production.');
+            return;
+        }
+
         $zonePunjab = Zone::where('code', 'PZ')->first();
         $zoneFederal = Zone::where('code', 'FCZ')->first();
 

@@ -20,8 +20,9 @@
         AddType text/css .css
     </IfModule>
 
-    # Block access to .env, .git, composer, package configs, sql backups, logs
-    <FilesMatch "(?i)^(\.env.*|\.git|composer\.(json|lock)|package(-lock)?\.json|artisan|phpunit\.xml.*|vite\.config\..*|.*\.(?:log|md|sql|bak|sh|py|ini|conf|zip|tar|gz|7z))$">
+    # Block access to .env, .git, composer, package configs, sql backups, logs.
+    # OCR language data (*.traineddata.gz) is the only .gz the browser may fetch.
+    <FilesMatch "(?i)^(\.env.*|\.git|composer\.(json|lock)|package(-lock)?\.json|artisan|phpunit\.xml.*|vite\.config\..*|.*\.(?:log|md|sql|bak|sh|py|ini|conf|zip|tar|7z)|.*(?<!\.traineddata)\.gz)$">
         Order allow,deny
         Deny from all
     </FilesMatch>
@@ -57,7 +58,7 @@
             Header set Expires "0"
         </FilesMatch>
         <FilesMatch "^index\.html$">
-            Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://www.google.com/recaptcha/; frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+            Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https://www.google.com/recaptcha/; frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; worker-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
         </FilesMatch>
     </IfModule>
 

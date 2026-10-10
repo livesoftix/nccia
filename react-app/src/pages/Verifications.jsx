@@ -134,7 +134,7 @@ export default function Verifications() {
   const fetchData = (p = page) => {
     const params = new URLSearchParams();
     params.set('page', String(p));
-    params.set('per_page', '15');
+    params.set('per_page', '10');
     if (search) params.set('search', search);
     if (statusFilter) params.set('status', statusFilter);
     api.get('/verifications?' + params.toString()).then(r => {

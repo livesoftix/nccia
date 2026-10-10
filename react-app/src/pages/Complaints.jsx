@@ -64,7 +64,7 @@ export default function Complaints() {
 
   const fetchList = (p = page) => {
     setLoading(true);
-    api.get(`/complaints?page=${p}&per_page=15`).then(r => {
+    api.get(`/complaints?page=${p}&per_page=10`).then(r => {
       setList(r.data.data || r.data || []);
       setMeta({ ...(r.data.meta || { current_page: p }), links: r.data.links || {} });
     }).finally(() => setLoading(false));

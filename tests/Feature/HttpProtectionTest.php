@@ -17,8 +17,11 @@ class HttpProtectionTest extends TestCase
         $request->setRouteResolver(fn () => new Route('GET', '/', [SpaController::class, 'index']));
         $response = (new SecurityHeaders)->handle($request, fn () => response('<html/>')->header('X-Powered-By', 'test'));
         $policy = $response->headers->get('Content-Security-Policy');
-        $this->assertStringContainsString("script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;", $policy);
-        $this->assertStringNotContainsString("script-src 'self' 'unsafe-inline'", $policy);
+        // 'wasm-unsafe-eval' lets the self-hosted OCR/PDF engines compile WebAssembly only.
+        $this->assertStringContainsString("script-src 'self' 'wasm-unsafe-eval' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;", $policy);
+        $this->assertStringNotContainsString("'unsafe-inline'", explode(';', explode('script-src', $policy)[1])[0]);
+        $this->assertStringNotContainsString("'unsafe-eval'", $policy);
+        $this->assertStringContainsString("worker-src 'self'", $policy);
         $this->assertStringContainsString("object-src 'none'", $response->headers->get('Content-Security-Policy'));
         $this->assertSame('DENY', $response->headers->get('X-Frame-Options'));
         $this->assertStringContainsString('camera=(self)', $response->headers->get('Permissions-Policy'));

@@ -32,31 +32,21 @@ async function initWorker(onStatus) {
     if (m.status === 'recognizing text') onStatus(`OCR ${Math.round((m.progress || 0) * 100)}%…`);
   };
 
+  // Self-hosted assets only: the CSP allows no third-party script/connect origins,
+  // and a same-origin worker URL (not a blob: wrapper) keeps the worker within worker-src 'self'.
   try {
-    // 1. Try standard worker
-    const worker = await createWorker('eng', 1, {
-      logger,
-      errorHandler: (e) => console.warn('Tesseract warning:', e),
-    });
-    return worker;
-  } catch (err1) {
-    console.warn('Default worker failed, trying local assets:', err1);
-  }
-
-  try {
-    // 2. Try local assets
-    const worker = await createWorker('eng', 1, {
+    return await createWorker('eng', 1, {
       workerPath: `${TESS_BASE}/worker.min.js`,
       corePath: `${TESS_BASE}`,
       langPath: `${TESS_BASE}/lang`,
       gzip: true,
+      workerBlobURL: false,
       logger,
-      errorHandler: (e) => console.error('Tesseract local error:', e),
+      errorHandler: (e) => console.error('Tesseract error:', e),
     });
-    return worker;
-  } catch (err2) {
-    console.error('All OCR worker initialization attempts failed:', err2);
-    throw err2;
+  } catch (err) {
+    console.error('OCR worker initialization failed:', err);
+    throw asError(err, 'OCR engine could not start. Check that /react/tesseract assets are deployed.');
   }
 }
 

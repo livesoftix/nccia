@@ -3,6 +3,11 @@ require __DIR__.'/vendor/autoload.php';
 $app = require __DIR__.'/bootstrap/app.php';
 $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
+if (PHP_SAPI !== 'cli' || app()->isProduction()) {
+    echo "Refusing to wipe case data outside a local CLI environment." . PHP_EOL;
+    exit(1);
+}
+
 use App\Models\Arrest;
 use App\Models\CaseActivity;
 use App\Models\CaseApproval;

@@ -19,6 +19,7 @@ import DepartmentProgress from './pages/DepartmentProgress';
 import Complaints from './pages/Complaints';
 import ComplaintForm from './pages/ComplaintForm';
 import ComplaintPdfImport from './pages/ComplaintPdfImport';
+import OcrImports from './pages/OcrImports';
 import AdpImport from './pages/AdpImport';
 import Verifications from './pages/Verifications';
 import VerificationForm from './pages/VerificationForm';
@@ -152,6 +153,7 @@ function AppRoutes() {
         <Route path="complaints" element={<FeatureRoute feature="complaints"><Complaints /></FeatureRoute>} />
         <Route path="complaints/create" element={<CreateComplaintRoute><ComplaintForm /></CreateComplaintRoute>} />
         <Route path="complaints/import-pdf" element={<CreateComplaintRoute><ComplaintPdfImport /></CreateComplaintRoute>} />
+        <Route path="complaints/ocr-imports" element={<CreateComplaintRoute><OcrImports /></CreateComplaintRoute>} />
         <Route path="complaints/adp" element={<CreateComplaintRoute><AdpImport /></CreateComplaintRoute>} />
         <Route path="complaints/:id/edit" element={<FeatureRoute feature="complaints"><ComplaintForm /></FeatureRoute>} />
         <Route path="verifications" element={<FeatureRoute feature="verifications"><Verifications /></FeatureRoute>} />

@@ -1,3 +1,21 @@
+import api from '../api';
+
+export async function printApiDocument(path) {
+  const win = preparePrintWindow();
+  if (!win) return;
+  try {
+    const response = await api.get(path, { headers: { Accept: 'text/html, application/json' } });
+    if (typeof response.data !== 'string' || !response.headers['content-type']?.includes('text/html')
+        || /<div[^>]+id=["']root["']/.test(response.data)) {
+      throw new Error('The server did not return a printable document. Please sign in again and retry.');
+    }
+    writePrintWindow(win, response.data);
+  } catch (error) {
+    closePrintWindow(win);
+    alert(error.response?.data?.message || error.message || 'The document could not be loaded. Please retry.');
+  }
+}
+
 export function preparePrintWindow() {
   const win = window.open('', '_blank', 'width=850,height=900,scrollbars=yes,resizable=yes');
   if (!win) {

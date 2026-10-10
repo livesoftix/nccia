@@ -392,10 +392,10 @@ class VerificationController extends Controller
             \Log::error('storeReport error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Failed to save verification report: ' . $e->getMessage(),
+                    'message' => 'Failed to save verification report: ' . \App\Services\ClientError::message($e),
                 ], 500);
             }
-            return back()->withInput()->with('error', 'Failed to save report: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Failed to save report: ' . \App\Services\ClientError::message($e));
         }
     }
 
@@ -635,10 +635,10 @@ class VerificationController extends Controller
             \Log::error('updateReport error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'Failed to update verification report: ' . $e->getMessage(),
+                    'message' => 'Failed to update verification report: ' . \App\Services\ClientError::message($e),
                 ], 500);
             }
-            return back()->withInput()->with('error', 'Failed to update report: ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Failed to update report: ' . \App\Services\ClientError::message($e));
         }
     }
 
@@ -1465,7 +1465,7 @@ class VerificationController extends Controller
                         report($e);
 
                         return response()->json([
-                            'message' => 'Enquiry registration failed: ' . $e->getMessage(),
+                            'message' => 'Enquiry registration failed: ' . \App\Services\ClientError::message($e),
                         ], 500);
                     }
                     break;

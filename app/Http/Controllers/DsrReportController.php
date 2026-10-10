@@ -43,7 +43,7 @@ class DsrReportController extends Controller
             ]);
         }
 
-        return response()->json($query->paginate(min(50, max(10, (int) $request->query('per_page', 15)))));
+        return response()->json($query->paginate(min(50, max(10, (int) $request->query('per_page', 10)))));
     }
 
     public function preview(Request $request)

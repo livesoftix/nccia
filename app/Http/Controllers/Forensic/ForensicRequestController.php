@@ -554,7 +554,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('ForensicRequest assign error: ' . $e->getMessage());
-            return response()->json(['message' => 'Assignment failed: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Assignment failed: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -606,7 +606,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('forwardToForensic error: ' . $e->getMessage());
-            return response()->json(['message' => 'Forwarding failed: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Forwarding failed: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -649,7 +649,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('sendBackToDd error: ' . $e->getMessage());
-            return response()->json(['message' => 'Send back to DD failed: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Send back to DD failed: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -701,7 +701,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('sendBackToCi error: ' . $e->getMessage());
-            return response()->json(['message' => 'Send back to CI failed: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Send back to CI failed: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -747,7 +747,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('sendBackToEo error: ' . $e->getMessage());
-            return response()->json(['message' => 'Send back failed: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Send back failed: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -801,7 +801,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('updateFindings error: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to update findings: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Failed to update findings: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -870,7 +870,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('submitToAd error: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to submit report: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Failed to submit report: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -988,7 +988,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('markReady error: ' . $e->getMessage());
-            return response()->json(['message' => 'Failed to approve report: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Failed to approve report: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 
@@ -1061,7 +1061,7 @@ class ForensicRequestController extends Controller
             ]);
         } catch (\Throwable $e) {
             Log::error('handOver error: ' . $e->getMessage());
-            return response()->json(['message' => 'Handover failed: ' . $e->getMessage()], 422);
+            return response()->json(['message' => 'Handover failed: ' . \App\Services\ClientError::message($e)], 422);
         }
     }
 

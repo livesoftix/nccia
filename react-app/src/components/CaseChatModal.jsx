@@ -1,4 +1,5 @@
 import CaseChatPanel from './CaseChatPanel';
+import { createPortal } from 'react-dom';
 
 export default function CaseChatModal({
   open,
@@ -11,7 +12,7 @@ export default function CaseChatModal({
 }) {
   if (!open || !id) return null;
 
-  return (
+  return createPortal(
     <div
       style={{
         position: 'fixed',
@@ -86,6 +87,6 @@ export default function CaseChatModal({
           />
         </div>
       </div>
-    </div>
+    </div>, document.body
   );
 }

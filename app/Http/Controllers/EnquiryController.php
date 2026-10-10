@@ -918,13 +918,13 @@ class EnquiryController extends Controller
                 $query->whereIn('status', $statuses);
             }
 
-            $perPage = (int) request('per_page', 15);
+            $perPage = min(100, max(1, (int) request('per_page', 15)));
             $enquiries = $query->latest('id')->paginate($perPage);
 
             return response()->json($enquiries);
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Enquiries index error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-            return response()->json(['error' => $e->getMessage(), 'data' => [], 'total' => 0], 200);
+            return response()->json(['error' => \App\Services\ClientError::message($e), 'data' => [], 'total' => 0], 200);
         }
     }
 
@@ -1325,7 +1325,7 @@ class EnquiryController extends Controller
             report($e);
 
             return response()->json([
-                'message' => 'Enquiry update failed: ' . $e->getMessage(),
+                'message' => 'Enquiry update failed: ' . \App\Services\ClientError::message($e),
             ], 500);
         }
     }
@@ -1353,7 +1353,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print summon: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print summon: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1380,7 +1380,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print diary: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print diary: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1400,7 +1400,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print CFR: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print CFR: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1425,7 +1425,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print forensic request: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print forensic request: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1472,7 +1472,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print raid permission: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print raid permission: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1493,7 +1493,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print search warrant: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print search warrant: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1514,7 +1514,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print arrest warrant: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print arrest warrant: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1546,7 +1546,7 @@ class EnquiryController extends Controller
             ]);
         } catch (\Throwable $e) {
             report($e);
-            return response()->json(['message' => 'Could not print account opening request: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Could not print account opening request: ' . \App\Services\ClientError::message($e)], 500);
         }
     }
 
@@ -1841,7 +1841,7 @@ class EnquiryController extends Controller
             report($e);
 
             return response()->json([
-                'message' => 'Enquiry approve failed: ' . $e->getMessage(),
+                'message' => 'Enquiry approve failed: ' . \App\Services\ClientError::message($e),
             ], 500);
         }
 
@@ -1940,7 +1940,7 @@ class EnquiryController extends Controller
             report($e);
 
             return response()->json([
-                'message' => 'Case registration failed: ' . $e->getMessage(),
+                'message' => 'Case registration failed: ' . \App\Services\ClientError::message($e),
             ], 500);
         }
     }

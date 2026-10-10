@@ -118,16 +118,33 @@ Route::middleware(['web', 'auth:sanctum', 'account.security', 'throttle:api'])->
     Route::post('/complaints/{complaint}/notify-complainant', [ComplaintController::class, 'notifyComplainant'])
         ->middleware('role:operator,admin,circle_incharge');
 
-    Route::get('/complaint-pdf-imports', [ComplaintPdfImportController::class, 'index']);
-    Route::get('/complaint-pdf-imports/stats', [ComplaintPdfImportController::class, 'stats']);
-    Route::get('/complaint-pdf-imports/capabilities', [ComplaintPdfImportController::class, 'capabilities']);
+    // Circle-scoped Python OCR pipeline (queued; circle fixed at upload).
+    Route::middleware('role:operator,admin,circle_incharge,director_general')->prefix('ocr-imports')->group(function () {
+        Route::get('/circles', [\App\Http\Controllers\OcrImportController::class, 'circles']);
+        Route::get('/stats', [\App\Http\Controllers\OcrImportController::class, 'stats']);
+        Route::get('/', [\App\Http\Controllers\OcrImportController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\OcrImportController::class, 'store'])->middleware('throttle:30,1');
+        Route::get('/{import}', [\App\Http\Controllers\OcrImportController::class, 'show'])->whereNumber('import');
+        Route::get('/{import}/pages/{pageNo}', [\App\Http\Controllers\OcrImportController::class, 'page'])->whereNumber(['import', 'pageNo']);
+        Route::get('/{import}/file', [\App\Http\Controllers\OcrImportController::class, 'file'])->whereNumber('import');
+        Route::put('/{import}/review', [\App\Http\Controllers\OcrImportController::class, 'review'])->whereNumber('import');
+        Route::post('/{import}/retry', [\App\Http\Controllers\OcrImportController::class, 'retry'])->whereNumber('import')->middleware('throttle:30,1');
+    });
+
+    Route::get('/complaint-pdf-imports', [ComplaintPdfImportController::class, 'index'])
+        ->middleware('role:operator,admin,circle_incharge,director_general');
+    Route::get('/complaint-pdf-imports/stats', [ComplaintPdfImportController::class, 'stats'])
+        ->middleware('role:operator,admin,circle_incharge,director_general');
+    Route::get('/complaint-pdf-imports/capabilities', [ComplaintPdfImportController::class, 'capabilities'])
+        ->middleware('role:operator,admin,circle_incharge,director_general');
     Route::post('/complaint-pdf-imports', [ComplaintPdfImportController::class, 'store'])
         ->middleware('role:operator,admin,circle_incharge');
     Route::post('/complaint-pdf-imports/preview', [ComplaintPdfImportController::class, 'preview'])
         ->middleware('role:operator,admin,circle_incharge');
     Route::post('/complaint-pdf-imports/render-page', [ComplaintPdfImportController::class, 'renderPage'])
         ->middleware('role:operator,admin,circle_incharge');
-    Route::get('/complaint-pdf-imports/{complaintPdfImport}', [ComplaintPdfImportController::class, 'show']);
+    Route::get('/complaint-pdf-imports/{complaintPdfImport}', [ComplaintPdfImportController::class, 'show'])
+        ->middleware('role:operator,admin,circle_incharge,director_general');
     Route::post('/complaint-pdf-imports/{complaintPdfImport}/process', [ComplaintPdfImportController::class, 'process'])
         ->middleware('role:operator,admin,circle_incharge');
     Route::post('/complaint-pdf-imports/{complaintPdfImport}/extract', [ComplaintPdfImportController::class, 'extract'])
